@@ -1,4 +1,5 @@
 import { DismissButton } from "@/components/button/dismiss_button";
+import { CommentBox } from "@/components/section/comment-box";
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 import { SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
@@ -41,6 +42,12 @@ export default function CommunityDetailPage() {
             얼마나 고생했는데요...
           </Detail>
           <CommentCount>댓글 (1개)</CommentCount>
+
+          <CommentBox></CommentBox>
+          <CommentBox></CommentBox>
+          <CommentBox></CommentBox>
+          <CommentBox></CommentBox>
+          
         </ScrollView>
       </SafeAreaView>
     </Container>
@@ -128,7 +135,8 @@ const Detail = styled.Text`
 `;
 
 const CommentCount = styled.Text`
-    font-size: 20px;
-    font-weight: 700;
-    color: #5457F7;
-`
+  font-size: 20px;
+  font-weight: 700;
+  color: #5457f7;
+  margin-bottom: 20px;
+`;
