@@ -43,7 +43,9 @@ export const Avatar = styled.View`
   margin-right: 10px;
 `;
 
-export const UserTextContainer = styled.View``;
+export const UserTextContainer = styled.View`
+  gap:3px
+`;
 
 export const UserName = styled.Text`
   font-size: 17px;
@@ -110,7 +112,6 @@ export const BottomBarContainer = styled.View`
   width: 100%;
   flex-direction: row;
   align-items: center;
-
   justify-content: space-between;
   margin-bottom: 20px;
 `
@@ -127,7 +128,7 @@ export const BottomBar = styled.View`
 `;
 
 export const PriceContainer = styled.View`
-  
+  margin-left: -35px;
   
 `;
 

@@ -41,40 +41,39 @@ export default function SelectCertificatePage() {
     <S.Container>
       <SafeAreaView>
         <S.Header>
-        <S.BackButton onPress={()=>{
-          router.dismiss();
-        }}>
-          <Entypo name="chevron-thin-left" size={22} color="black" />        
-        </S.BackButton>
-        <S.HeaderTitle>자격증 선택</S.HeaderTitle>
-      </S.Header>
+          <S.BackButton onPress={()=>{
+            router.dismiss();
+          }}>
+            <Entypo name="chevron-thin-left" size={22} color="black" />        
+          </S.BackButton>
+          <S.HeaderTitle>자격증 선택</S.HeaderTitle>
+        </S.Header>
 
-      <S.SearchContainer>
-        <S.SearchInput placeholder="검색어를 입력해주세요" />
-        <Feather name="search" size={22} color="black" />
-      </S.SearchContainer>
+        <S.SearchContainer>
+          <S.SearchInput placeholder="검색어를 입력해주세요" />
+          <Feather name="search" size={22} color="black" />
+        </S.SearchContainer>
 
-      <S.CertificateList>
-        {certificates.map((cert, index) => (
-          <S.CertificateItem
-            key={index}
-            selected={selected.includes(cert)}
-            onPress={() => toggleSelection(cert)}
-          >
-            <S.CertificateText selected={selected.includes(cert)}>
-              {cert}
-            </S.CertificateText>
-          </S.CertificateItem>
-        ))}
-      </S.CertificateList>
-
+        <S.CertificateList>
+          {certificates.map((cert, index) => (
+            <S.CertificateItem
+              key={index}
+              selected={selected.includes(cert)}
+              onPress={() => toggleSelection(cert)}
+            >
+              <S.CertificateText selected={selected.includes(cert)}>
+                {cert}
+              </S.CertificateText>
+            </S.CertificateItem>
+          ))}
+        </S.CertificateList>
+      </SafeAreaView>
       <S.ButtonContainer>
         <PrimaryButton
           text={`확인 (${selected.length}개 선택됨)`}
           action={handleConfirm}
         />
       </S.ButtonContainer>
-      </SafeAreaView>
     </S.Container>
   );
 }

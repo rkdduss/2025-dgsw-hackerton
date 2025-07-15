@@ -13,7 +13,7 @@ export const PrimaryChip = ({ chipText, active }: Props) => {
   );
 };
 const Container = styled.View<{ active: boolean }>`
-  padding: 15px;
+  padding: 10px 15px;
   border-radius: 30px;
   background-color: ${({ active }) => (active ? "#5457F7" : "lightgray")};
   opacity: ${({ active }) => (active ? 1 : 0.5)};
