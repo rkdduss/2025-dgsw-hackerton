@@ -102,6 +102,7 @@ export const FilterButton = styled.TouchableOpacity<{ active: boolean }>`
   border-radius: 30px;
   background-color: ${({ active, theme }) => (active ? theme.colors.primary : 'rgba(0,0,0,0.05)')};
   margin-right: 10px;
+  
 `;
 
 export const FilterText = styled.Text<{ active: boolean }>`

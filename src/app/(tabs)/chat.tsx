@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { api } from '@/libs/api';
 import { getMyChatRooms, ChatRoom } from '@/services/chat.service';
+import { useQuery } from '@tanstack/react-query';
 
 interface User {
   id: string;
@@ -13,12 +14,37 @@ interface User {
 
 export default function ChatPage() {
   const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
-  const [chatRooms, setChatRooms] = useState<ChatRoom[]>([]);
+  // user, chatRooms, userMap, loading 상태 제거
   const [userMap, setUserMap] = useState<{ [id: string]: User }>({});
-  const [loading, setLoading] = useState(true);
 
-  // 유저 정보 캐싱 fetch
+  // 유저 정보 쿼리
+  const {
+    data: user,
+    isLoading: userLoading,
+    error: userError,
+  } = useQuery({
+    queryKey: ['me'],
+    queryFn: async () => {
+      const res = await api.axiosInstance.get('/users/me');
+      return res.data;
+    },
+  });
+
+  // 채팅방 목록 쿼리 (user가 있을 때만 enabled)
+  const {
+    data: chatRooms = [],
+    isLoading: chatRoomsLoading,
+    error: chatRoomsError,
+  } = useQuery({
+    queryKey: ['chatRooms', user?.id],
+    queryFn: () => {
+      if (!user?.id) return Promise.resolve([]); // user가 없으면 빈 배열 반환
+      return getMyChatRooms(user.id);
+    },
+    enabled: !!user?.id,
+  });
+
+  // 유저 정보 캐싱 fetch (userMap은 그대로 사용)
   const fetchUser = async (id: string) => {
     if (userMap[id]) return userMap[id];
     try {
@@ -32,27 +58,19 @@ export default function ChatPage() {
     }
   };
 
+  // 상대방 정보 미리 fetch (chatRooms 변경 시)
   useEffect(() => {
+    if (!user?.id || !chatRooms.length) return;
     (async () => {
-      try {
-        const res = await api.axiosInstance.get('/users/me');
-        setUser(res.data);
-        const rooms = await getMyChatRooms(res.data.id);
-        setChatRooms(rooms);
-        // 상대방 정보 미리 fetch
-        for (const room of rooms) {
-          const otherId = room.users.find((uid) => uid !== res.data.id);
-          if (otherId) await fetchUser(otherId);
-        }
-        setLoading(false);
-      } catch (err) {
-        setLoading(false);
+      for (const room of chatRooms) {
+        const otherId = room.users.find((uid) => uid !== user.id);
+        if (otherId) await fetchUser(otherId);
       }
     })();
-    // eslint-disable-next-line
-  }, []);
+  }, [chatRooms, user?.id]);
 
-  if (loading) return <S.Container><S.HeaderTitle>로딩중...</S.HeaderTitle></S.Container>;
+  if (userLoading || chatRoomsLoading) return <S.Container><S.HeaderTitle>로딩중...</S.HeaderTitle></S.Container>;
+  if (userError || chatRoomsError) return <S.Container><S.HeaderTitle>에러 발생</S.HeaderTitle></S.Container>;
 
   return (
     <S.Container>
@@ -61,12 +79,17 @@ export default function ChatPage() {
           <S.HeaderTitle>채팅</S.HeaderTitle>
         </S.Header>
         <S.ChatList>
-          {chatRooms.length === 0 && <S.HeaderTitle>채팅방이 없습니다</S.HeaderTitle>}
-          {chatRooms.map((chat) => {
-            const otherId = chat.users.find((uid) => uid !== user?.id);
-            const other = otherId ? userMap[otherId] : undefined;
-            return (
-              <S.ChatItemContainer key={chat.id} onPress={() => router.push(`/chat-detail?id=${chat.id}`)}>
+          {Array.isArray(chatRooms) && chatRooms.length === 0 && (
+            <S.HeaderTitle>채팅방이 없습니다</S.HeaderTitle>
+          )}
+          {Array.isArray(chatRooms) &&
+            chatRooms.map((chat: any) => {
+              const otherId = Array.isArray(chat.users)
+                ? chat.users.find((uid: string) => uid !== user?.id)
+                : undefined;
+              const other = otherId ? userMap[otherId] : undefined;
+              return (
+                <S.ChatItemContainer key={chat.id} onPress={() => router.push(`/chat-detail?id=${chat.id}`)}>
                 <S.Avatar />
                 <S.ChatContent>
                   <S.ChatHeader>

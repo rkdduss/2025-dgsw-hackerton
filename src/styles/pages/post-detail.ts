@@ -25,8 +25,8 @@ export const HeaderTitle = styled.Text`
 `;
 
 export const ImageContainer = styled.View`
-  height: 362px;
-  background-color: #f3f4f5;
+  
+  
 `;
 
 export const UserInfoContainer = styled.View`

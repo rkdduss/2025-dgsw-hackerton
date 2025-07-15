@@ -1,3 +1,4 @@
+import { Image } from 'react-native';
 import styled from 'styled-components/native';
 
 export const Container = styled.TouchableOpacity`
@@ -6,7 +7,7 @@ export const Container = styled.TouchableOpacity`
   align-items: center;
 `;
 
-export const PostImage = styled.View`
+export const PostImage = styled(Image)`
   width: 72px;
   height: 72px;
   border-radius: 10px;
