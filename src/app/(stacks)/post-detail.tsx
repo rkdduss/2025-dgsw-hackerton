@@ -1,7 +1,6 @@
 import { ScrollView, View } from 'react-native';
 import * as S from '../../styles/pages/post-detail';
 import { PrimaryButton } from '../../components/button/PrimaryButton';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 interface Props {
   type: 'job' | 'worker';

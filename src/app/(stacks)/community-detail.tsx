@@ -2,14 +2,22 @@ import { DismissButton } from "@/components/button/dismiss_button";
 import { CommentBox } from "@/components/section/comment-box";
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
-import { SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
+import { Dimensions, SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
 
 export default function CommunityDetailPage() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const images = [
+    "/Users/dgsw07/Desktop/React-Native/2025-dgsw-hackerton/assets/sixgiga.png",
+    "/Users/dgsw07/Desktop/React-Native/2025-dgsw-hackerton/assets/sixgiga.png",
+    "/Users/dgsw07/Desktop/React-Native/2025-dgsw-hackerton/assets/sixgiga.png",
+    "/Users/dgsw07/Desktop/React-Native/2025-dgsw-hackerton/assets/sixgiga.png",
+  ];
   const [heart, setHeart] = useState(false);
   const handleHeart = () => {
     setHeart((prev) => !prev);
   };
+
   return (
     <Container>
       <SafeAreaView style={{ width: "100%", height: "100%" }}>
@@ -19,7 +27,28 @@ export default function CommunityDetailPage() {
         </Header>
 
         <ScrollView>
-          <ImageArea />
+          <ImageCarousel
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            onScroll={(e) => {
+              const index = Math.round(
+                e.nativeEvent.contentOffset.x /
+                  e.nativeEvent.layoutMeasurement.width
+              );
+              setCurrentIndex(index);
+            }}
+            scrollEventThrottle={16}
+          >
+            {images.map((uri, i) => (
+              <ImageItem key={i} source={{ uri }} resizeMode="contain" />
+            ))}
+          </ImageCarousel>
+          <IndicatorContainer>
+            {images.map((_, i) => (
+              <IndicatorDot key={i} active={i === currentIndex} />
+            ))}
+          </IndicatorContainer>
           <UserInfo>
             <UserProfileImage />
             <UserInfoColumn>
@@ -47,7 +76,6 @@ export default function CommunityDetailPage() {
           <CommentBox></CommentBox>
           <CommentBox></CommentBox>
           <CommentBox></CommentBox>
-          
         </ScrollView>
       </SafeAreaView>
     </Container>
@@ -73,12 +101,32 @@ const HeaderText = styled.Text`
   font-weight: 600;
 `;
 
-const ImageArea = styled.View`
-  width: 100%;
+const ImageCarousel = styled.ScrollView`
+  width: ${Dimensions.get("window").width}px;
   height: 362px;
-  background-color: #f3f4f5;
   border-radius: 10px;
+  margin-bottom: 8px;
+`;
+
+const ImageItem = styled.Image`
+  width: ${Dimensions.get("window").width}px;
+  height: 362px;
+  background-color: #F3F4F5;
+`;
+
+const IndicatorContainer = styled.View`
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
   margin-bottom: 16px;
+`;
+
+const IndicatorDot = styled.View<{ active: boolean }>`
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  background-color: ${({ active }) => (active ? "#5457F7" : "#D9D9D9")};
+  margin: 0 4px;
 `;
 
 //유저정보

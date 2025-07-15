@@ -79,3 +79,4 @@ const SettingCotainer = styled.View`
 const SettingTitle = styled.Text`
     font-weight: 600;   
 `
+

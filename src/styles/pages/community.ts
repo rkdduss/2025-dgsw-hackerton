@@ -21,6 +21,7 @@ export const ChipRow = styled.View`
   flex-direction: row;
   gap: 8px;
   margin-bottom: 24px;
+  margin-left: 20;
 `;
 
 export const ChipWrapper = styled.TouchableOpacity``;
