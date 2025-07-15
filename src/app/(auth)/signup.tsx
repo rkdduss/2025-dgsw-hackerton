@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import AuthCommon from "./auth-common";
+import AuthCommon from "../../components/auth/auth-common";
 import styled from "styled-components/native";
 
 export default function SignupPage() {

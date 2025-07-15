@@ -2,6 +2,7 @@
   "expo": {
     "name": "2025dgsw_hackerton",
     "slug": "2025dgsw_hackerton",
+    "scheme": "2025dgsw_hackerton",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -26,12 +27,7 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      [
-        "expo-router",
-        {
-          "root": "./src/apps"
-        }
-      ]
+      "expo-router"
     ]
   }
 }

@@ -4,11 +4,15 @@ interface Props {
   action: () => void;
   text: string;
   disabled?: boolean;
+  style? : "default"| "small"
 }
 
-export const PrimaryButton = ({ action, text, disabled = false }: Props) => {
+export const PrimaryButton = ({ action, text, disabled = false, style }: Props) => {
+
   return (
-    <Container isDisabled={disabled} disabled={disabled} onPress={action}>
+    <Container isDisabled={disabled} disabled={disabled} onPress={action} style={
+      style == "small" && {width:125}
+    }>
       <ButtonText isDisabled={disabled}>{text}</ButtonText>
     </Container>
   );

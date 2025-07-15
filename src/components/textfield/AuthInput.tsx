@@ -9,7 +9,7 @@ export const Authinput = ({placeholder}:Props) => {
     return (
         <Container>
             <InputArea 
-            placeholder={placeholder}
+                placeholder={placeholder}
             />
         </Container>
     );
@@ -19,7 +19,7 @@ export const Authinput = ({placeholder}:Props) => {
 const Container = styled.View`
     padding: 0 20px;
     width: 100%;
-    height: 55;
+    height: 55px;
     border-radius: 5px;
     background-color: #F3F4F5;
     justify-content: center;
@@ -28,5 +28,5 @@ const Container = styled.View`
 `
 const InputArea = styled.TextInput`
     width: 100%;
-    color: #7D848A;
+    color: #000000;
 `

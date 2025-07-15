@@ -1,5 +1,5 @@
-import * as S from "../styles/pages/splash";
-import Splash from "../../assets/splash.png";
+import * as S from "../../styles/pages/splash";
+import Splash from "../../../assets/splash.png";
 import { useEffect } from "react";
 import { useRouter } from "expo-router";
 

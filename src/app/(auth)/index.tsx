@@ -1,7 +1,7 @@
-import * as S from "../styles/pages/main";
-import Main from "../../assets/main.png";
+import * as S from "../../styles/pages/auth-main";
+import Main from "../../../assets/main.png";
 import { Image, View } from "react-native";
-import { PrimaryButton } from "../components/button/PrimaryButton";
+import { PrimaryButton } from "../../components/button/PrimaryButton";
 import { useRouter } from "expo-router";
 
 export default function MainPage ()  {
