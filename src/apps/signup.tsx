@@ -8,7 +8,6 @@ export default function SignupPage() {
       <Title>서비스 이용을 위한 동의 안내</Title>
       <SubTitle>서비스 이용에 필수적인 사항입니다.</SubTitle>
       <SubTitle>약관을 클릭하여 모두 확인해주세요.</SubTitle>
-      <
     </AuthCommon>
   );
 }
