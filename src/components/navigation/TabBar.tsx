@@ -25,7 +25,7 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
           </S.TabButton>
         );
       })}
-      <S.CentralButton onPress={() => navigation.navigate('community')}>
+      <S.CentralButton onPress={() => navigation.navigate('write-post')}>
         <S.CentralIcon>
           <Entypo name="plus" size={28} color="white" />
         </S.CentralIcon>

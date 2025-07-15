@@ -7,7 +7,7 @@ export const Container = styled.View`
 
 export const Header = styled.View`
   padding: 20px;
-  padding-top: 60px;
+  
   flex-direction: row;
   justify-content: center;
   align-items: center;
@@ -16,7 +16,7 @@ export const Header = styled.View`
 export const BackButton = styled.TouchableOpacity`
   position: absolute;
   left: 20px;
-  top: 60px;
+  
 `;
 
 export const HeaderTitle = styled.Text`
@@ -55,7 +55,7 @@ export const CertificateItem = styled.TouchableOpacity<{ selected: boolean }>`
 `;
 
 export const CertificateText = styled.Text<{ selected: boolean }>`
-  font-size: 18px;
+  font-size: 16px;
   font-weight: ${({ selected }) => (selected ? 'bold' : '600')};
   color: ${({ selected, theme }) => (selected ? theme.colors.primary : '#000000')};
 `;

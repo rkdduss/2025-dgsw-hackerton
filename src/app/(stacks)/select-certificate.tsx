@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import * as S from '../../styles/pages/select-certificate';
 import { PrimaryButton } from '../../components/button/PrimaryButton';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Entypo, Feather } from '@expo/vector-icons';
+import { router, useLocalSearchParams, useRouter } from 'expo-router';
 
 const certificates = [
   '정보처리기능사',
@@ -15,6 +18,7 @@ const certificates = [
 ];
 
 export default function SelectCertificatePage() {
+  const router = useRouter();
   const [selected, setSelected] = useState<string[]>(['정보처리기능사']);
 
   const toggleSelection = (cert: string) => {
@@ -25,16 +29,29 @@ export default function SelectCertificatePage() {
     }
   };
 
+  const handleConfirm = () => {
+    // write-post로 자격증 배열 전달
+    router.back();
+    setTimeout(() => {
+      router.setParams({ certificates: selected });
+    }, 100);
+  };
+
   return (
     <S.Container>
-      <S.Header>
-        <S.BackButton>{/* Add back icon */}</S.BackButton>
+      <SafeAreaView>
+        <S.Header>
+        <S.BackButton onPress={()=>{
+          router.dismiss();
+        }}>
+          <Entypo name="chevron-thin-left" size={22} color="black" />        
+        </S.BackButton>
         <S.HeaderTitle>자격증 선택</S.HeaderTitle>
       </S.Header>
 
       <S.SearchContainer>
         <S.SearchInput placeholder="검색어를 입력해주세요" />
-        <S.SearchIcon source={require('../../../assets/dismiss.png')} />
+        <Feather name="search" size={22} color="black" />
       </S.SearchContainer>
 
       <S.CertificateList>
@@ -53,10 +70,11 @@ export default function SelectCertificatePage() {
 
       <S.ButtonContainer>
         <PrimaryButton
-          text={`다음 (${selected.length}개 선택됨)`}
-          action={() => {}}
+          text={`확인 (${selected.length}개 선택됨)`}
+          action={handleConfirm}
         />
       </S.ButtonContainer>
+      </SafeAreaView>
     </S.Container>
   );
 }
