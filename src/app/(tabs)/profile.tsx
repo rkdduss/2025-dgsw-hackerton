@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Alert, TouchableOpacity } from "react-native";
 import * as S from "../../styles/pages/chat";
 import { useRouter } from "expo-router";
@@ -6,6 +6,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import styled from "styled-components/native";
 import { Entypo } from "@expo/vector-icons";
 import { api } from "@/libs/api";
+import { UserResponse, fetchMyInfo } from "@/services/user.service";
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -15,16 +16,19 @@ export default function ProfilePage() {
     router.push(`/chat-detail?id=${chatId}`);
   };
 
-  const getMe = async () => {
-    try {
-      const res = await api.axiosInstance.get("/user/me");
-      console.log(res.data);
-    } catch (e) {
-      console.error(e);
-    }
-  };
+  const [user, setUser] = useState<UserResponse>(null);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    const loadUser = async () => {
+      try {
+        const res = await fetchMyInfo();
+        setUser(res.data);
+      } catch (err) {
+        console.error("사용자 정보 불러오기 실패", err);
+      }
+    };
+    loadUser();
+  }, []);
 
   const handleDeleteAccount = async () => {
     try {
@@ -44,7 +48,7 @@ export default function ProfilePage() {
         <ProfileContainer>
           <Profile></Profile>
           <ProfileInfo>
-            <ProfileName>먼지</ProfileName>
+            <ProfileName>{user}</ProfileName>
             <ProfileMap>먼지없음</ProfileMap>
           </ProfileInfo>
         </ProfileContainer>

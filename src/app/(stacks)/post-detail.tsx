@@ -1,22 +1,54 @@
-import { ScrollView, TouchableOpacity, View } from 'react-native';
-import * as S from '../../styles/pages/post-detail';
-import { PrimaryButton } from '../../components/button/PrimaryButton';
-import { DismissButton } from '@/components/button/dismiss_button';
-import { useState } from 'react';
-import { Ionicons } from '@expo/vector-icons';
+import {
+  Dimensions,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import * as S from "../../styles/pages/post-detail";
+import { PrimaryButton } from "../../components/button/PrimaryButton";
+import { DismissButton } from "@/components/button/dismiss_button";
+import { useEffect, useState } from "react";
+import { Ionicons } from "@expo/vector-icons";
+import { useLocalSearchParams } from "expo-router";
+import { api } from "@/libs/api";
 
+export default function PostDetailPage() {
+  const { post } = useLocalSearchParams();
+  const parsedPost = post ? JSON.parse(post as string) : null;
 
-interface Props {
-  type: 'job' | 'worker';
+  const isJob = parsedPost?.isRecruitment ?? false;
 
-}
-
-export default function PostDetailPage({ type }: Props) {
-  const isJob = type === 'job';
   const [heart, setHeart] = useState(false);
-  const handleHeart = () => {
-    setHeart((prev) => !prev);
-  };
+  const handleHeart = () => setHeart((prev) => !prev);
+
+  const [user, setUser] = useState<any>();
+  const screenWidth = Dimensions.get("window").width;
+  const [imageIndex, setImageIndex] = useState(0);
+
+  if (!parsedPost) {
+    return (
+      <S.Container>
+        <S.HeaderTitle>게시글이 존재하지 않아요!</S.HeaderTitle>
+      </S.Container>
+    );
+  }
+
+  useEffect(() => {
+    api.axiosInstance
+      .get(`/users/${parsedPost.userId}`)
+      .then((res: any) => {
+        console.log(res.data);
+        setUser(res.data);
+      })
+      .catch((err: any) => {
+        console.log(err);
+      });
+  }, []);
+
+  if (!user) {
+    return <></>;
+  }
 
   return (
     <View style={{ flex: 1 }}>
@@ -24,47 +56,88 @@ export default function PostDetailPage({ type }: Props) {
         <ScrollView>
           <S.Header>
             <DismissButton />
-            <S.HeaderTitle>{isJob ? '구인' : '구직'}</S.HeaderTitle>
+            <S.HeaderTitle>{parsedPost.type}</S.HeaderTitle>
           </S.Header>
 
-          <S.ImageContainer />
+          <S.ImageContainer>
+            <ScrollView
+              horizontal
+              pagingEnabled
+              showsHorizontalScrollIndicator={false}
+              onScroll={(e) => {
+                const index = Math.floor(
+                  e.nativeEvent.contentOffset.x / screenWidth + 0.5
+                );
+                setImageIndex(index);
+              }}
+              scrollEventThrottle={16}
+              contentContainerStyle={{
+                alignItems:"center"
+              }}
+            >
+              {parsedPost.images?.map((img: string, idx: number) => (
+                <Image
+                  key={idx}
+                  source={{ uri: img }}
+                  style={{
+                    width: screenWidth,
+                    height: 250,
+                    resizeMode: "cover",
+                  }}
+                />
+              ))}
+            </ScrollView>
+
+            {/* 인디케이터 */}
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                position:"absolute",
+                bottom:20,
+                width:"100%"
+              }}
+            >
+              {parsedPost.images?.map((_: string, idx: number) => (
+                <View
+                  key={idx}
+                  style={{
+                    width: 8,
+                    height: 8,
+                    borderRadius: 4,
+                    backgroundColor: idx === imageIndex ? "#5457F7" : "#ccc",
+                    marginHorizontal: 4,
+                  }}
+                />
+              ))}
+            </View>
+          </S.ImageContainer>
 
           <S.UserInfoContainer>
             <S.Avatar />
             <S.UserTextContainer>
-              <S.UserName>{isJob ? '사장남' : '알바님'}</S.UserName>
-              <S.UserLocation>
-                {isJob ? '명륜진사갈비 대구율하점 • 1km 이내' : '율하역 인근 거주'}
-              </S.UserLocation>
+              <S.UserName>{user?.name}</S.UserName>
+
+              <S.UserLocation>{user.location}</S.UserLocation>
             </S.UserTextContainer>
           </S.UserInfoContainer>
 
           <S.PostContentContainer>
-            <S.PostTitle>
-              {isJob ? '친절한 알바생 구합니다' : '정보처리산업기사 보유 개발자 입니다.'}
-            </S.PostTitle>
+            <S.PostTitle>{parsedPost.title}</S.PostTitle>
             <S.PostInfo>
-              {isJob ? '고용 내역: 30명 • 1시간 전' : '경력 3년 • 1시간 전'}
+              {isJob ? "고용 내역: 30명 • 1시간 전" : "경력 3년 • 1시간 전"}
             </S.PostInfo>
-            <S.PostDescription>
-              {isJob
-                ? '고깃집 알바 구합니다! 장사는 잘되지만 사람이 적어서 편하실겁니다 오래보실분 위주로 구하고있습니다.'
-                : '정보처리산업기사 보유중입니다. 많은 연락주세요! 그리고 돈안주실거면 연락하지마세요!'}
-            </S.PostDescription>
+            <S.PostDescription>{parsedPost.content}</S.PostDescription>
           </S.PostContentContainer>
 
           <S.Section>
-            <S.SectionTitle>{isJob ? '필요 자격' : '보유 자격'}</S.SectionTitle>
+            <S.SectionTitle>{isJob ? "필요 자격" : "보유 자격"}</S.SectionTitle>
             <S.TagContainer>
-              <S.Tag active={false}>
-                <S.TagText active={false}>정보처리기능사</S.TagText>
-              </S.Tag>
-              <S.Tag active={true}>
-                <S.TagText active={true}>정보처리산업기사</S.TagText>
-              </S.Tag>
-              <S.Tag active={false}>
-                <S.TagText active={false}>정보처리기사</S.TagText>
-              </S.Tag>
+              {parsedPost.certificates.map((cert: string, idx: number) => (
+                <S.Tag key={idx} active={idx === 0}>
+                  <S.TagText active={idx === 0}>{cert}</S.TagText>
+                </S.Tag>
+              ))}
             </S.TagContainer>
           </S.Section>
         </ScrollView>
@@ -80,9 +153,9 @@ export default function PostDetailPage({ type }: Props) {
           </TouchableOpacity>
           <S.PriceContainer>
             <S.PriceLabel>시급 (오전 9시 ~ 오후 6시)</S.PriceLabel>
-            <S.Price>{isJob ? '34,000원' : '12,000원'}</S.Price>
+            <S.Price>{isJob ? "34,000원" : "12,000원"}</S.Price>
           </S.PriceContainer>
-          <PrimaryButton text="채팅 하기" action={() => {}} style="small"/>
+          <PrimaryButton text="채팅 하기" action={() => {}} style="small" />
         </S.BottomBarContainer>
       </S.BottomBar>
     </View>

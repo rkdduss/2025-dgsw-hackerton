@@ -5,6 +5,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Alert,
+  Image,
 } from "react-native";
 import * as S from "../../styles/pages/write-post";
 import { PrimaryButton } from "../../components/button/PrimaryButton";
@@ -12,7 +13,12 @@ import { useRouter, useLocalSearchParams } from "expo-router";
 import Entypo from "@expo/vector-icons/Entypo";
 import styled from "styled-components/native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import * as ImagePicker from "expo-image-picker";
+import DraggableFlatList, { RenderItemParams } from "react-native-draggable-flatlist";
+import ImageViewing from "react-native-image-viewing";
 import { uploadPost } from "@/services/post";
+import axios, { Axios } from "axios";
+import { api } from "@/libs/api";
 
 const categories = [
   "구인",
@@ -34,6 +40,98 @@ export default function WritePostPage() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedCertificates, setSelectedCertificates] = useState<string[]>([]);
   const [isPickerShow, setPickerShow] = useState(false);
+  const [images, setImages] = useState<string[]>([]);
+  const [previewVisible, setPreviewVisible] = useState(false);
+  const [previewIndex, setPreviewIndex] = useState(0);
+
+  const getFileExtension = (uri: string): string => {
+    try {
+      const cleanUri = uri.split("?")[0];
+      const extMatch = cleanUri.match(/\.(\w+)$/);
+      return extMatch ? extMatch[1].toLowerCase() : "jpg";
+    } catch {
+      return "jpg";
+    }
+  };
+
+  const pickImage = async () => {
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!permissionResult.granted) {
+      alert("이미지 접근 권한이 필요합니다.");
+      return;
+    }
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsMultipleSelection: true,
+      quality: 1,
+      selectionLimit: 10 - images.length,
+    });
+    if (!result.canceled && result.assets) {
+      const uris = result.assets.map((asset) => asset.uri).filter(Boolean);
+      setImages((prev) => [...prev, ...uris].slice(0, 10));
+    }
+  };
+
+  const handleRemoveImage = (idx: number) => {
+    Alert.alert("이미지 삭제", "정말로 이미지를 지우시겠습니까?", [
+      { text: "취소", style: "cancel" },
+      {
+        text: "삭제",
+        style: "destructive",
+        onPress: () => {
+          setImages((prev) => prev.filter((_, i) => i !== idx));
+        },
+      },
+    ]);
+  };
+
+  const handlePreview = (idx: number) => {
+    setPreviewIndex(idx);
+    setPreviewVisible(true);
+  };
+
+  const renderImageItem = ({ item, drag, isActive }: RenderItemParams<string>) => {
+    const idx = images.indexOf(item);
+    return (
+      <View style={{ width: 80, height: 80, marginRight: 8 }}>
+        <TouchableOpacity
+          onLongPress={drag}
+          onPress={() => handlePreview(idx)}
+          disabled={isActive}
+          activeOpacity={0.8}
+          style={{
+            width: "100%",
+            height: "100%",
+            borderRadius: 8,
+            overflow: "hidden",
+            position: "relative",
+          }}
+        >
+          <Image
+            source={{ uri: item }}
+            style={{ width: "100%", height: "100%", opacity: isActive ? 0.7 : 1 }}
+          />
+          <TouchableOpacity
+            onPress={() => handleRemoveImage(idx)}
+            style={{
+              position: "absolute",
+              top: 4,
+              right: 4,
+              width: 20,
+              height: 20,
+              borderRadius: 10,
+              backgroundColor: "rgba(0,0,0,0.6)",
+              justifyContent: "center",
+              alignItems: "center",
+              zIndex: 1,
+            }}
+          >
+            <Entypo name="cross" size={12} color="white" />
+          </TouchableOpacity>
+        </TouchableOpacity>
+      </View>
+    );
+  };
 
   useEffect(() => {
     let newCertificates: string[] = [];
@@ -72,26 +170,51 @@ export default function WritePostPage() {
     }
 
     try {
+      const formData = new FormData();
+      images.forEach((uri, index) => {
+        const ext = getFileExtension(uri);
+        const mimeType = `image/${ext === "jpg" ? "jpeg" : ext}`;
+        formData.append("files", {
+          uri,
+          name: `image_${index}.${ext}`,
+          type: mimeType,
+        } as any);
+      });
+
+      const imageRes = await api.axiosInstance.post("/post/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      
+
+      
+
+      const res = await api.axiosInstance.get("/users/me");
+      console.log(res.data)
       const postPayload = {
-        userId: "HgfMP1DaFiYzo4CpPSjW7rhRoV23",
+        userId: res.data.id,
         title,
         content,
-        images: [],
+        images: imageRes.data,
         isRecruitment: selectedCategory === "구인",
         type: selectedCategory ?? "기타",
         certificates: selectedCertificates,
       };
 
-      const postRes = await uploadPost(postPayload);
+      await uploadPost(postPayload);
 
       Alert.alert("✅ 게시글 등록 완료", "게시글이 성공적으로 등록되었어요!");
       router.replace("/community");
     } catch (error: any) {
+      console.log(error)
       Alert.alert(
         "⚠️ 등록 실패",
         error.response?.data?.message || "알 수 없는 오류가 발생했어요"
       );
-      console.error("🚨 등록 실패", error);
+      if (axios.isAxiosError(error)) {
+        console.error("🚨 등록 실패", error.response?.data);
+      }
     }
   };
 
@@ -108,6 +231,43 @@ export default function WritePostPage() {
           </S.Header>
 
           <S.Form>
+            <S.ImagePickerContainer>
+              <View style={{ width: "100%" }}>
+                <DraggableFlatList
+                  data={images}
+                  horizontal
+                  showsHorizontalScrollIndicator={true}
+                  onDragEnd={({ data }) => setImages(data)}
+                  keyExtractor={(item) => item}
+                  renderItem={renderImageItem}
+                  style={{ height: 80 }}
+                  contentContainerStyle={{ flexDirection: "row" }}
+                  ListHeaderComponent={
+                    <S.ImagePicker
+                      onPress={pickImage}
+                      style={{
+                        width: 80,
+                        height: 80,
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Entypo name="camera" size={22} color="#d1d5db" />
+                      <S.ImagePickerText>{images.length}/10</S.ImagePickerText>
+                    </S.ImagePicker>
+                  }
+                />
+                <ImageViewing
+                  images={images.map((uri) => ({ uri }))}
+                  imageIndex={previewIndex}
+                  visible={previewVisible}
+                  onRequestClose={() => setPreviewVisible(false)}
+                  swipeToCloseEnabled={true}
+                  doubleTapToZoomEnabled={true}
+                />
+              </View>
+            </S.ImagePickerContainer>
+
             <S.InputContainer>
               <S.InputLabel>제목</S.InputLabel>
               <S.TextInput
@@ -147,9 +307,7 @@ export default function WritePostPage() {
 
             <S.InputContainer>
               <S.InputLabel>자격증</S.InputLabel>
-              <S.DropdownContainer
-                onPress={() => router.push("/select-certificate")}
-              >
+              <S.DropdownContainer onPress={() => router.push("/select-certificate")}>
                 <S.DropdownText>
                   {selectedCertificates.length > 0
                     ? selectedCertificates.join(", ")

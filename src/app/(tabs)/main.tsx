@@ -23,17 +23,20 @@ export default function MainPage() {
   const [activeFilter, setActiveFilter] = useState("내 보유 자격증");
   const router = useRouter();
 
-  const handlePostPress = () => {
-    router.push("/post-detail");
+  const handlePostPress = (post: PostResponse) => {
+    router.push({
+      pathname: "/post-detail",
+      params: { post: JSON.stringify(post) },
+    });
   };
-
   const [posts, setPosts] = useState<PostResponse[]>([]);
 
   useEffect(() => {
     const loadPosts = async () => {
       try {
         const res = await fetchPosts();
-        setPosts(res.data); 
+        console.log(res.data);
+        setPosts(res.data);
       } catch (err) {
         console.error("게시글 불러오기 실패 😢", err);
       }
@@ -89,10 +92,15 @@ export default function MainPage() {
         </S.FilterContainer>
 
         <S.PostListContainer>
-        {posts.map((post, idx) => (
-         
-          <Post key={idx} uid={post.userId} title={post.title}  onPress={handlePostPress} />
-            ))}
+          {posts.map((post, idx) => (
+            <Post
+              key={idx}
+              uid={post.userId}
+              title={post.title}
+              images={post.images}
+              onPress={() => handlePostPress(post)}
+            />
+          ))}
         </S.PostListContainer>
       </ScrollView>
     </S.Container>
