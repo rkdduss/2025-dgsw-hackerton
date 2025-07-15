@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { View } from 'react-native';
 import * as S from '../../styles/pages/select-category';
 import { PrimaryButton } from '../../components/button/PrimaryButton';
 import { useRouter } from 'expo-router';

@@ -1,7 +1,7 @@
 import styled from "styled-components/native";
 import { PrimaryButton } from "../button/PrimaryButton";
 import { ReactNode } from "react";
-import { Pressable, TouchableHighlight, View, KeyboardAvoidingView, Platform, Keyboard, TouchableWithoutFeedback } from "react-native";
+import * as RN from "react-native";
 import { useRouter } from "expo-router";
 
 import Entypo from '@expo/vector-icons/Entypo';
@@ -18,10 +18,10 @@ interface Props {
 export default function AuthCommon({ title, children, buttonText, action }: Props) {
   const router = useRouter();
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <KeyboardAvoidingView
+    <RN.TouchableWithoutFeedback onPress={RN.Keyboard.dismiss} accessible={false}>
+      <RN.KeyboardAvoidingView
         style={{ flex: 1 }}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        behavior={RN.Platform.OS === "ios" ? "padding" : "height"}
       >
         <Container>
           <Header>
@@ -33,7 +33,7 @@ export default function AuthCommon({ title, children, buttonText, action }: Prop
           <Child>
             {children}
           </Child>
-          <View style={{ width: "100%" }}>
+          <RN.View style={{ width: "100%" }}>
             <PrimaryButton
               text={buttonText}
               action={() => {
@@ -41,10 +41,10 @@ export default function AuthCommon({ title, children, buttonText, action }: Prop
                 action();
               }}
             />
-          </View>
+          </RN.View>
         </Container>
-      </KeyboardAvoidingView>
-    </TouchableWithoutFeedback>
+      </RN.KeyboardAvoidingView>
+    </RN.TouchableWithoutFeedback>
   );
 }
 
@@ -79,7 +79,7 @@ const HeaderTitle = styled.Text`
   color: black;
 `;
 
-const DismissIcon = styled(Pressable)`
+const DismissIcon = styled(RN.Pressable)`
   position: absolute;
   left: 0;
 `;

@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import { View } from 'react-native';
 import * as S from '../../styles/pages/select-certificate';
 import { PrimaryButton } from '../../components/button/PrimaryButton';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Entypo, Feather } from '@expo/vector-icons';
-import { router, useLocalSearchParams, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 
 const certificates = [
   '정보처리기능사',

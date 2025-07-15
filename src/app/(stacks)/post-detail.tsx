@@ -1,6 +1,7 @@
 import { ScrollView, View } from 'react-native';
 import * as S from '../../styles/pages/post-detail';
 import { PrimaryButton } from '../../components/button/PrimaryButton';
+import { DismissButton } from '@/components/button/dismiss_button';
 
 interface Props {
   type: 'job' | 'worker';
@@ -14,9 +15,7 @@ export default function PostDetailPage({ type }: Props) {
       <S.Container>
         <ScrollView>
           <S.Header>
-            <S.BackButton>
-              {/* Add back icon */}
-            </S.BackButton>
+            <DismissButton />
             <S.HeaderTitle>{isJob ? '구인' : '구직'}</S.HeaderTitle>
           </S.Header>
 

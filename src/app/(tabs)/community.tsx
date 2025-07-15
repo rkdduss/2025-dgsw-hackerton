@@ -16,13 +16,15 @@ export default function CommunityPage() {
           <S.HeaderTitle>커뮤니티</S.HeaderTitle>
           <AntDesign name="plus" size={26} color="#5457F7" />
         </S.Header>
-        <S.ChipRow>
-          {chipList.map((chip) => (
-            <S.ChipWrapper key={chip} onPress={() => setSelectedChip(chip)}>
-              <PrimaryChip chipText={chip} active={selectedChip === chip} />
-            </S.ChipWrapper>
-          ))}
-        </S.ChipRow>
+        <ScrollView horizontal = {true}>
+          <S.ChipRow>
+            {chipList.map((chip) => (
+              <S.ChipWrapper key={chip} onPress={() => setSelectedChip(chip)}>
+                <PrimaryChip chipText={chip} active={selectedChip === chip} />
+              </S.ChipWrapper>
+            ))}
+          </S.ChipRow>
+        </ScrollView>
         <S.Divider />
         <ScrollView>
           <S.CommunityBoxListArea>

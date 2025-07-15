@@ -1,5 +1,4 @@
 import React from 'react';
-import { View } from 'react-native';
 import * as S from '../../styles/pages/chat';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
