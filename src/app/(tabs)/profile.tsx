@@ -1,9 +1,10 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import * as S from '../../styles/pages/chat';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import styled from 'styled-components/native';
+import { Entypo } from '@expo/vector-icons';
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -28,9 +29,21 @@ export default function ProfilePage() {
             </ProfileContainer>
             <Diveder/>
             <SettingCotainer>
-                <SettingTitle></SettingTitle>
+                <SettingTitle>이용약관</SettingTitle>
+                <Entypo name="chevron-thin-right" size={18} color="black" />
             </SettingCotainer>
-            <Diveder/>
+            <SettingCotainer>
+                <SettingTitle>개인정보처리약관</SettingTitle>
+                <Entypo name="chevron-thin-right" size={18} color="black" />
+            </SettingCotainer>
+            
+            <SettingCotainer>
+                <SettingTitle>로그아웃</SettingTitle>    
+            </SettingCotainer>
+            <SettingCotainer>
+                <SettingTitleRed>회원탈퇴</SettingTitleRed>
+                
+            </SettingCotainer>
         </SafeAreaView>
     </S.Container>
   );
@@ -69,14 +82,19 @@ const Diveder = styled.View`
     background-color: #F3F4F5;
 `
 
-const SettingCotainer = styled.View`
-    width: 100%;
+const SettingCotainer = styled(TouchableOpacity)`
     margin: 20px;
-    
-    
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
 `
 
 const SettingTitle = styled.Text`
-    font-weight: 600;   
+    font-weight: 500;   
+    font-size: 17px;
 `
-
+const SettingTitleRed = styled.Text`
+    font-weight: 500;   
+    font-size: 17px;
+    color: red;
+`
