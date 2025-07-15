@@ -4,6 +4,7 @@ import { InputSection } from '../../components/section/input-section';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { login } from '@/services/auth';
+import { tokenStorage } from '@/libs/api';
 
 
 export default function LoginPage() {
@@ -21,8 +22,8 @@ export default function LoginPage() {
     try {
       const res = await login(email, password);
       console.log("✅ 로그인 성공:", res);
-
-      // 👉 토큰 저장 필요하면 여기서 AsyncStorage 등에 저장 가능
+        
+      tokenStorage.setTokens(res.idToken)
 
       router.replace("/(tabs)/main");
     } catch (e: any) {

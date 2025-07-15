@@ -5,7 +5,7 @@ import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import styled from "styled-components/native";
 import { Entypo } from "@expo/vector-icons";
-import { api } from "@/api/api";
+import { api } from "@/libs/api";
 
 export default function ProfilePage() {
   const router = useRouter();

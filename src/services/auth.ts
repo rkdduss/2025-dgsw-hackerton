@@ -1,4 +1,4 @@
-import { api } from "@/api/api";
+import { api } from "@/libs/api";
 import axios from "axios";
 
 export const login = async (email: string, password: string) => {
