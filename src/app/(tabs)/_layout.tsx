@@ -10,7 +10,7 @@ export default function TabLayout() {
       tabBar={(props) => <TabBar {...props} />}
     >
       <Tabs.Screen name="main" />
-      <Tabs.Screen name="write-post" />
+      <Tabs.Screen name="community" />
       <Tabs.Screen name="chat" />
       <Tabs.Screen name="profile" />
     </Tabs>

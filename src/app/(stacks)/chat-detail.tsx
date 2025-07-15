@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { View, Text } from 'react-native';
 import * as S from '../../styles/pages/chat-detail';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 

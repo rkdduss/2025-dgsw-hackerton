@@ -7,6 +7,7 @@ export default function RootLayout() {
     <ThemeProvider theme={theme}>
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="post-detail" />
+        <Stack.Screen name="community-detail" />
         <Stack.Screen name="select-certificate" />
         <Stack.Screen name="select-category" />
         <Stack.Screen name="chat-detail" />

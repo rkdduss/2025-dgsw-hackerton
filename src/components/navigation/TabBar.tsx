@@ -5,7 +5,6 @@ import * as S from '../../styles/components/navigation/tab-bar';
 import { MaterialIcons, FontAwesome6, Entypo } from '@expo/vector-icons';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Feather from '@expo/vector-icons/Feather';
-import AntDesign from '@expo/vector-icons/AntDesign';
 
 const navItems = [
   { name: '홈', route: 'main', icon: (isFocused: boolean) => <Feather name="home" size={24} color={isFocused ? '#3D5CFF' : '#B0B0B0'} /> },
@@ -26,7 +25,7 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
           </S.TabButton>
         );
       })}
-      <S.CentralButton onPress={() => navigation.navigate('write-post')}>
+      <S.CentralButton onPress={() => navigation.navigate('community')}>
         <S.CentralIcon>
           <Entypo name="plus" size={28} color="white" />
         </S.CentralIcon>
