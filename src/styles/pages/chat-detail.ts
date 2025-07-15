@@ -7,7 +7,7 @@ export const Container = styled.View`
 
 export const Header = styled.View`
   padding: 20px;
-  padding-top: 60px;
+  
   flex-direction: row;
   align-items: center;
   justify-content: center;
@@ -18,7 +18,7 @@ export const Header = styled.View`
 export const BackButton = styled.TouchableOpacity`
   position: absolute;
   left: 20px;
-  top: 60px;
+  
 `;
 
 export const HeaderTitle = styled.Text`
