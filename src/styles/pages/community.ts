@@ -24,6 +24,8 @@ export const FilterSelectContainer = styled.View`
 
 export const ChipRow = styled.ScrollView`
   flex-direction: row;
+  margin-bottom: 24px;
+  margin-left: 20;
 `;
 
 export const ChipWrapper = styled.TouchableOpacity`

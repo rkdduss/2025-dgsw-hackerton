@@ -1,12 +1,12 @@
 import { ScrollView, TouchableOpacity, View } from 'react-native';
 import * as S from '../../styles/pages/post-detail';
 import { PrimaryButton } from '../../components/button/PrimaryButton';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 
 interface Props {
   type: 'job' | 'worker';
+
 }
 
 export default function PostDetailPage({ type }: Props) {
