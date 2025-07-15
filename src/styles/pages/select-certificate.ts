@@ -62,4 +62,5 @@ export const CertificateText = styled.Text<{ selected: boolean }>`
 
 export const ButtonContainer = styled.View`
   padding: 20px;
+  padding-bottom: 0px;
 `;

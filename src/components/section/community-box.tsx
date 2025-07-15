@@ -33,6 +33,7 @@ const RowWrap = styled.Pressable`
   align-items: center;
   justify-content: space-between;
   border-radius: 12px;
+  margin-bottom: 20px;
 `;
 
 const TextContainer = styled.View`

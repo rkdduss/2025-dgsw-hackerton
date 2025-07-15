@@ -4,17 +4,16 @@ interface Props {
   action: () => void;
   text: string;
   disabled?: boolean;
-  style? : "default"| "small"
+  style?: "small" | "default"
 }
 
 export const PrimaryButton = ({ action, text, disabled = false, style }: Props) => {
-
   return (
-    <Container isDisabled={disabled} disabled={disabled} onPress={action} style={
-      style == "small" && {width:125}
-    }>
+    <Container isDisabled={disabled} disabled={disabled} onPress={action} style={style && {
+      width:120
+    }}>
       <ButtonText isDisabled={disabled}>{text}</ButtonText>
-    </Container>
+    </Container>  
   );
 };
 
@@ -26,6 +25,7 @@ const Container = styled.TouchableOpacity<{ isDisabled: boolean }>`
   justify-content: center;
   align-items: center;
 `;
+
 const ButtonText = styled.Text<{ isDisabled: boolean }>`
   font-size: 16px;
   font-weight: 600;

@@ -1,14 +1,22 @@
-import { ScrollView, View } from 'react-native';
+import { ScrollView, TouchableOpacity, View } from 'react-native';
 import * as S from '../../styles/pages/post-detail';
 import { PrimaryButton } from '../../components/button/PrimaryButton';
 import { DismissButton } from '@/components/button/dismiss_button';
+import { useState } from 'react';
+import { Ionicons } from '@expo/vector-icons';
+
 
 interface Props {
   type: 'job' | 'worker';
+
 }
 
 export default function PostDetailPage({ type }: Props) {
   const isJob = type === 'job';
+  const [heart, setHeart] = useState(false);
+  const handleHeart = () => {
+    setHeart((prev) => !prev);
+  };
 
   return (
     <View style={{ flex: 1 }}>
@@ -63,6 +71,13 @@ export default function PostDetailPage({ type }: Props) {
       </S.Container>
       <S.BottomBar>
         <S.BottomBarContainer>
+          <TouchableOpacity onPress={handleHeart} activeOpacity={0.7}>
+            <Ionicons
+              name={heart ? "heart-sharp" : "heart-outline"}
+              size={24}
+              color={heart ? "#5457F7" : "#A0A0A0"}
+            />
+          </TouchableOpacity>
           <S.PriceContainer>
             <S.PriceLabel>시급 (오전 9시 ~ 오후 6시)</S.PriceLabel>
             <S.Price>{isJob ? '34,000원' : '12,000원'}</S.Price>
