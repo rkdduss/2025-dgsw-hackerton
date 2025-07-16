@@ -7,6 +7,7 @@ import { UserResponse } from "@/services/user.service";
 import { Entypo, Ionicons } from "@expo/vector-icons";
 import { rotationHandlerName } from "react-native-gesture-handler/lib/typescript/handlers/RotationGestureHandler";
 import { FlatList } from "react-native-gesture-handler";
+import { useQuery } from '@tanstack/react-query';
 
 export default function OtherUserProfilePage() {
   const { id } = useLocalSearchParams();
@@ -49,6 +50,15 @@ export default function OtherUserProfilePage() {
     }
   }, [id]);
 
+  // 내 user 정보 가져오기
+  const { data: me } = useQuery({
+    queryKey: ['me'],
+    queryFn: async () => {
+      const res = await api.axiosInstance.get('/users/me');
+      return res.data;
+    },
+  });
+
   if (loading) {
     return (
       <Container>
@@ -80,8 +90,10 @@ export default function OtherUserProfilePage() {
           <UserInfo>
             <Row>
               <UserName>{user.name}</UserName>
-              <ChatButton onPress={()=>{
-                router.push(`/(stacks)/chat-detail?id=${user.id}`)
+              <ChatButton onPress={() => {
+                if (!me?.id || !user?.id) return;
+                const roomId = [me.id, user.id].sort().join('_');
+                router.push(`/(stacks)/chat-detail?id=${roomId}`);
               }}>
                 <ChatButtonText>채팅하기</ChatButtonText>
               </ChatButton>

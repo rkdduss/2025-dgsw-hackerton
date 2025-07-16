@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { api } from '@/libs/api';
 import { getMyChatRooms, ChatRoom } from '@/services/chat.service';
 import { useQuery } from '@tanstack/react-query';
-import { View } from 'react-native';
+import { Image, View } from 'react-native';
 
 interface User {
   id: string;
@@ -109,7 +109,9 @@ export default function ChatPage() {
               const other = otherId ? userMap[otherId] : undefined;
               return (
                 <S.ChatItemContainer key={chat.id} onPress={() => router.push(`/chat-detail?id=${chat.id}`)}>
-                <S.Avatar />
+                <S.Avatar>
+                  <Image source={require("@/assets/small-profile.png")}/>
+                </S.Avatar>
                 <S.ChatContent>
                   <S.ChatHeader>
                     <S.ChatName>{other?.name || otherId || '상대방'}</S.ChatName>

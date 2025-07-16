@@ -5,7 +5,7 @@ import { api } from "@/libs/api";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import { Dimensions, SafeAreaView, ScrollView, TouchableOpacity, View, TextInput, Button, KeyboardAvoidingView, Platform } from "react-native";
+import { Dimensions, SafeAreaView, ScrollView, TouchableOpacity, View, TextInput, Button, KeyboardAvoidingView, Platform, Image } from "react-native";
 import styled from "styled-components/native";
 
 interface Post {
@@ -120,7 +120,9 @@ export default function CommunityDetailPage() {
               ))}
             </IndicatorContainer>
             <UserInfo>
-              <UserProfileImage />
+              <UserProfileImage>
+                <Image source={require("@/assets/small-profile.png")}/>
+              </UserProfileImage>
               <UserInfoColumn>
                 <Username>{author.name}</Username>
                 <UserLocation>{author.location}</UserLocation>

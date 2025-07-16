@@ -14,6 +14,7 @@ import { api } from "@/libs/api";
 import styled from "styled-components/native";
 import normalProfile from '../../../assets/nomal-profile.png';
 import { Entypo, Ionicons } from "@expo/vector-icons";
+import { useQuery } from '@tanstack/react-query';
 
 // util: firebase timestamp to '몇 분 전', '몇 시간 전' 등
 function getTimeAgo(createTime: { _seconds: number; _nanoseconds: number }) {
@@ -45,6 +46,15 @@ export default function PostDetailPage() {
   const [imageIndex, setImageIndex] = useState(0);
   const [heart, setHeart] = useState(false);
   const handleHeart = () => setHeart((prev) => !prev);
+
+  // 내 user 정보 가져오기
+  const { data: me } = useQuery({
+    queryKey: ['me'],
+    queryFn: async () => {
+      const res = await api.axiosInstance.get('/users/me');
+      return res.data;
+    },
+  });
 
   if (!parsedPost) {
     return (
@@ -154,7 +164,7 @@ export default function PostDetailPage() {
             >
               <Profile>
                 <Image
-                  source={normalProfile}
+                  source={require("@/assets/small-profile.png")}
                 ></Image>
               </Profile>
             </TouchableOpacity>
@@ -202,8 +212,9 @@ export default function PostDetailPage() {
           </S.PriceContainer>
 
           <PrimaryButton text="채팅 하기" action={() => {
-            console.log(`fuck ${user.id}`)
-            router.push(`/(stacks)/chat-detail?id=${user.id}`)
+            if (!me?.id || !user?.id) return;
+            const roomId = [me.id, user.id].sort().join('_');
+            router.push(`/(stacks)/chat-detail?id=${roomId}`);
           }} style="small" />
         </S.BottomBarContainer>
       </S.BottomBar>
@@ -212,8 +223,8 @@ export default function PostDetailPage() {
 }
 
 const Profile = styled.View`
-  width: 60px;
-  height: 60px;
+  width: 45px;
+  height: 45px;
   background-color: #5457f7;
   border-radius: 100px;
   justify-content: center;

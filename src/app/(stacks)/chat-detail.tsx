@@ -5,7 +5,7 @@ import { api } from '@/libs/api';
 import { subscribeMessages, sendMessage, ChatMessage, createChatRoom } from '@/services/chat.service';
 import { SafeAreaView, View, KeyboardAvoidingView, Platform } from 'react-native';
 import { DismissButton } from '@/components/button/dismiss_button';
-import { Entypo } from '@expo/vector-icons';
+import { Entypo, Ionicons } from '@expo/vector-icons';
 
 interface User {
   id: string;
@@ -126,7 +126,7 @@ export default function ChatDetailPage() {
               onChangeText={setInputText}
             />
             <S.SendButton onPress={handleSendMessage}>
-              <S.SendButtonText>▶</S.SendButtonText>
+              <Ionicons name="paper-plane-outline" size={18} color="white"/>
             </S.SendButton>
           </S.InputContainer>
           {error && <S.HeaderTitle style={{ color: 'red', fontSize: 14, marginTop: 8 }}>{error}</S.HeaderTitle>}  
