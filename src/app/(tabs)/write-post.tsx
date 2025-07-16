@@ -155,14 +155,6 @@ export default function WritePostPage() {
     }
   }, [params.certificates]);
 
-  useEffect(() => {
-    if (selectedCategory === '구인' || selectedCategory === '구직') {
-      setButtonCategory(selectedCategory);
-    } else {
-      setButtonCategory(null);
-    }
-  }, [selectedCategory]);
-
   // 게시글 등록 뮤테이션
   const postMutation = useMutation({
     mutationFn: async (postPayload: any) => {

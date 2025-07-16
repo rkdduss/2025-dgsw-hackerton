@@ -3,7 +3,7 @@ import * as S from '../../styles/pages/chat-detail';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { api } from '@/libs/api';
 import { subscribeMessages, sendMessage, ChatMessage, createChatRoom } from '@/services/chat.service';
-import { SafeAreaView, View } from 'react-native';
+import { SafeAreaView, View, KeyboardAvoidingView, Platform } from 'react-native';
 import { DismissButton } from '@/components/button/dismiss_button';
 import { Entypo } from '@expo/vector-icons';
 
@@ -95,37 +95,43 @@ export default function ChatDetailPage() {
   };
 
   return (
-    <S.Container>
-      <SafeAreaView style={{height:"100%"}}>
-        <S.Header>
-          <S.BackButton onPress={()=>{
-              router.dismiss();
-            }}>
-              <Entypo name="chevron-thin-left" size={22} color="black" />        
-          </S.BackButton>
-          <S.HeaderTitle>{other?.name || other?.id || '상대방'}</S.HeaderTitle>
-        </S.Header>
-        <S.MessageList>
-          {messages.map((message) => (
-            <S.MessageBubble key={message.id} isMyMessage={message.senderId === user?.id}>
-              <S.MessageText isMyMessage={message.senderId === user?.id}>
-                {message.text}
-              </S.MessageText>
-            </S.MessageBubble>
-          ))}
-        </S.MessageList>
-        <S.InputContainer>
-          <S.MessageInput
-            placeholder="메시지를 입력하세요..."
-            value={inputText}
-            onChangeText={setInputText}
-          />
-          <S.SendButton onPress={handleSendMessage}>
-            <S.SendButtonText>▶</S.SendButtonText>
-          </S.SendButton>
-        </S.InputContainer>
-        {error && <S.HeaderTitle style={{ color: 'red', fontSize: 14, marginTop: 8 }}>{error}</S.HeaderTitle>}  
-      </SafeAreaView>
-    </S.Container>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+    >
+      <S.Container>
+        <SafeAreaView style={{height:"100%"}}>
+          <S.Header>
+            <S.BackButton onPress={()=>{
+                router.dismiss();
+              }}>
+                <Entypo name="chevron-thin-left" size={22} color="black" />        
+            </S.BackButton>
+            <S.HeaderTitle>{other?.name || other?.id || '상대방'}</S.HeaderTitle>
+          </S.Header>
+          <S.MessageList>
+            {messages.map((message) => (
+              <S.MessageBubble key={message.id} isMyMessage={message.senderId === user?.id}>
+                <S.MessageText isMyMessage={message.senderId === user?.id}>
+                  {message.text}
+                </S.MessageText>
+              </S.MessageBubble>
+            ))}
+          </S.MessageList>
+          <S.InputContainer>
+            <S.MessageInput
+              placeholder="메시지를 입력하세요..."
+              value={inputText}
+              onChangeText={setInputText}
+            />
+            <S.SendButton onPress={handleSendMessage}>
+              <S.SendButtonText>▶</S.SendButtonText>
+            </S.SendButton>
+          </S.InputContainer>
+          {error && <S.HeaderTitle style={{ color: 'red', fontSize: 14, marginTop: 8 }}>{error}</S.HeaderTitle>}  
+        </SafeAreaView>
+      </S.Container>
+    </KeyboardAvoidingView>
   );
 }

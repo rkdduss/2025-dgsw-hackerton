@@ -234,7 +234,12 @@ export default function WritePostPage() {
       <S.Container>
         <SafeAreaView style={{ flex: 1 }}>
           <S.Header>
-            <S.HeaderTitle>커뮤니티</S.HeaderTitle>
+            <S.BackButton onPress={()=>{
+              router.dismiss();
+            }}>
+              <Entypo name="chevron-thin-left" size={22} color="black" />        
+            </S.BackButton>
+            <S.HeaderTitle>자격증 선택</S.HeaderTitle>
           </S.Header>
           <S.Form>
             <S.ImagePickerContainer>

@@ -13,6 +13,25 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { api } from "@/libs/api";
 import styled from "styled-components/native";
 import normalProfile from '../../../assets/nomal-profile.png';
+import { Entypo, Ionicons } from "@expo/vector-icons";
+
+// util: firebase timestamp to '몇 분 전', '몇 시간 전' 등
+function getTimeAgo(createTime: { _seconds: number; _nanoseconds: number }) {
+  if (!createTime || typeof createTime._seconds !== 'number') return '';
+  const now = Date.now();
+  const created = createTime._seconds * 1000 + Math.floor(createTime._nanoseconds / 1e6);
+  const diffMs = now - created;
+  const diffSec = Math.floor(diffMs / 1000);
+  if (diffSec < 60) return `${diffSec}초 전`;
+  const diffMin = Math.floor(diffSec / 60);
+  if (diffMin < 60) return `${diffMin}분 전`;
+  const diffHour = Math.floor(diffMin / 60);
+  if (diffHour < 24) return `${diffHour}시간 전`;
+  const diffDay = Math.floor(diffHour / 24);
+  if (diffDay < 7) return `${diffDay}일 전`;
+  const date = new Date(created);
+  return `${date.getFullYear()}.${date.getMonth() + 1}.${date.getDate()}`;
+}
 
 export default function PostDetailPage() {
   const { post } = useLocalSearchParams();
@@ -24,6 +43,8 @@ export default function PostDetailPage() {
   const [user, setUser] = useState<any>();
   const screenWidth = Dimensions.get("window").width;
   const [imageIndex, setImageIndex] = useState(0);
+  const [heart, setHeart] = useState(false);
+  const handleHeart = () => setHeart((prev) => !prev);
 
   if (!parsedPost) {
     return (
@@ -34,6 +55,7 @@ export default function PostDetailPage() {
   }
 
   useEffect(() => {
+    console.log(parsedPost)
     api.axiosInstance
       .get(`/users/${parsedPost.userId}`)
       .then((res: any) => {
@@ -56,7 +78,11 @@ export default function PostDetailPage() {
       <S.Container>
         <ScrollView>
           <S.Header>
-            <DismissButton />
+            <S.BackButton onPress={()=>{
+                router.dismiss();
+              }}>
+                <Entypo name="chevron-thin-left" size={22} color="black" />        
+            </S.BackButton>
             <S.HeaderTitle>{parsedPost.type}</S.HeaderTitle>
           </S.Header>
 
@@ -142,7 +168,9 @@ export default function PostDetailPage() {
           <S.PostContentContainer>
             <S.PostTitle>{parsedPost.title}</S.PostTitle>
             <S.PostInfo>
-              {isJob ? "고용 내역: 30명 • 1시간 전" : "경력 3년 • 1시간 전"}
+              {isJob
+                ? `고용 내역: 30명 • ${getTimeAgo(parsedPost.createTime)}`
+                : `경력 3년 • ${getTimeAgo(parsedPost.createTime)}`}
             </S.PostInfo>
             <S.PostDescription>{parsedPost.content}</S.PostDescription>
           </S.PostContentContainer>
@@ -161,25 +189,20 @@ export default function PostDetailPage() {
       </S.Container>
       <S.BottomBar>
         <S.BottomBarContainer>
-          <TouchableOpacity
-            onPress={() => {
-              console.log("");
-              router.push({
-                pathname: "/other-user-profile",
-                params: { id: user.id },
-              });
-            }}
-          >
-            <Profile>
-              <Image source={require("@/assets/nomal-profile.png")} />
-            </Profile>
+          <TouchableOpacity onPress={handleHeart} activeOpacity={0.7}>
+            <Ionicons
+              name={heart ? "heart-sharp" : "heart-outline"}
+              size={24}
+              color={heart ? "#5457F7" : "#A0A0A0"}
+            />
           </TouchableOpacity>
           <S.PriceContainer>
             <S.PriceLabel>시급 (오전 9시 ~ 오후 6시)</S.PriceLabel>
-            <S.Price>{isJob ? "34,000원" : "12,000원"}</S.Price>
+            <S.Price>{Number(parsedPost.price).toLocaleString()}원</S.Price>
           </S.PriceContainer>
 
           <PrimaryButton text="채팅 하기" action={() => {
+            console.log(`fuck ${user.id}`)
             router.push(`/(stacks)/chat-detail?id=${user.id}`)
           }} style="small" />
         </S.BottomBarContainer>

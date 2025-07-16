@@ -71,6 +71,7 @@ export default function CommunityPage() {
             {posts && (posts as any[]).map((post: any, idx: number) => (
               <CommunityBox
                 key={idx}
+                id={post.id}
                 title={post.title}
                 detail={post.content}
                 thumbnail={post.images?.[0]}

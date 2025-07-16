@@ -5,16 +5,21 @@ export const Container = styled.View`
   background-color: #ffffff;
 `;
 
+
 export const Header = styled.View`
   padding: 20px;
-  
   flex-direction: row;
-  justify-content: left;
+  justify-content: center;
   align-items: center;
 `;
 
+export const BackButton = styled.TouchableOpacity`
+  position: absolute;
+  left: 20px;
+`;
+
 export const HeaderTitle = styled.Text`
-  font-size: 22px;
+  font-size: 18px;
   font-family: 'Pretendard-SemiBold';
 `;
 

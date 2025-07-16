@@ -2,15 +2,16 @@ import { useRouter } from "expo-router";
 import styled from "styled-components/native";
 
 interface Props {
+  id:string;
   title: string;
   detail: string;
   thumbnail?: string;
 }
 
-export const CommunityBox = ({ title, detail, thumbnail }: Props) => {
+export const CommunityBox = ({ id, title, detail, thumbnail }: Props) => {
   const router = useRouter();
   const handleCommunityBox = () => {
-    router.push("/community-detail");
+    router.push(`/community-detail?id=${id}`);
   };
   return (
     <RowWrap onPress={handleCommunityBox}>

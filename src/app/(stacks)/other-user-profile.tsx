@@ -10,8 +10,19 @@ import { FlatList } from "react-native-gesture-handler";
 
 export default function OtherUserProfilePage() {
   const { id } = useLocalSearchParams();
+
+
   const [activeTab, setActiveTab] = useState<"posts" | "comments">("posts");
   const [user, setUser] = useState<UserResponse | null>(null);
+  useEffect(()=>{
+    api.axiosInstance.get(`/users/${id}`)
+      .then(res=>{
+        setUser(res.data)
+      })
+      .catch(err=>{
+
+      })
+  },[id])
   const [loading, setLoading] = useState(true);
   const posts = [
     {
@@ -69,7 +80,9 @@ export default function OtherUserProfilePage() {
           <UserInfo>
             <Row>
               <UserName>{user.name}</UserName>
-              <ChatButton>
+              <ChatButton onPress={()=>{
+                router.push(`/(stacks)/chat-detail?id=${user.id}`)
+              }}>
                 <ChatButtonText>채팅하기</ChatButtonText>
               </ChatButton>
             </Row>

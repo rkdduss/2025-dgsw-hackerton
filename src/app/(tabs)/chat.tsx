@@ -13,6 +13,23 @@ interface User {
   profile?: string;
 }
 
+// util: ms timestamp to '몇 분 전', '몇 시간 전' 등
+function getTimeAgoFromMs(createdAt: number) {
+  if (!createdAt) return '';
+  const now = Date.now();
+  const diffMs = now - createdAt;
+  const diffSec = Math.floor(diffMs / 1000);
+  if (diffSec < 60) return `${diffSec}초 전`;
+  const diffMin = Math.floor(diffSec / 60);
+  if (diffMin < 60) return `${diffMin}분 전`;
+  const diffHour = Math.floor(diffMin / 60);
+  if (diffHour < 24) return `${diffHour}시간 전`;
+  const diffDay = Math.floor(diffHour / 24);
+  if (diffDay < 7) return `${diffDay}일 전`;
+  const date = new Date(createdAt);
+  return `${date.getFullYear()}.${date.getMonth() + 1}.${date.getDate()}`;
+}
+
 export default function ChatPage() {
   const router = useRouter();
   // user, chatRooms, userMap, loading 상태 제거
@@ -96,7 +113,7 @@ export default function ChatPage() {
                 <S.ChatContent>
                   <S.ChatHeader>
                     <S.ChatName>{other?.name || otherId || '상대방'}</S.ChatName>
-                    <S.ChatTime>{chat.lastMessage ? new Date(chat.lastMessage.createdAt).toLocaleString() : ''}</S.ChatTime>
+                    <S.ChatTime>{chat.lastMessage ? getTimeAgoFromMs(chat.lastMessage.createdAt) : ''}</S.ChatTime>
                   </S.ChatHeader>
                   <S.LastMessage>{chat.lastMessage?.text || ''}</S.LastMessage>
                 </S.ChatContent>

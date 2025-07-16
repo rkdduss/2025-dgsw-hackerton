@@ -1,90 +1,147 @@
 import { DismissButton } from "@/components/button/dismiss_button";
+import { Post } from "@/components/post/post";
 import { CommentBox } from "@/components/section/comment-box";
+import { api } from "@/libs/api";
 import { Ionicons } from "@expo/vector-icons";
-import { useState } from "react";
-import { Dimensions, SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
+import { useLocalSearchParams } from "expo-router";
+import { useEffect, useState } from "react";
+import { Dimensions, SafeAreaView, ScrollView, TouchableOpacity, View, TextInput, Button, KeyboardAvoidingView, Platform } from "react-native";
 import styled from "styled-components/native";
 
+interface Post {
+  id: string;
+  userId: string;
+  title: string;
+  content: string;
+  tag: string[];
+  images: string[];
+  likeCount: number;
+  comments: any[]; 
+  createTime: {
+    _seconds: number;
+    _nanoseconds: number;
+  };
+}
+
+// util: firebase timestamp to '몇 분 전', '몇 시간 전' 등
+function getTimeAgo(createTime: { _seconds: number; _nanoseconds: number }) {
+  if (!createTime || typeof createTime._seconds !== 'number') return '';
+  const now = Date.now();
+  const created = createTime._seconds * 1000 + Math.floor(createTime._nanoseconds / 1e6);
+  const diffMs = now - created;
+  const diffSec = Math.floor(diffMs / 1000);
+  if (diffSec < 60) return `${diffSec}초 전`;
+  const diffMin = Math.floor(diffSec / 60);
+  if (diffMin < 60) return `${diffMin}분 전`;
+  const diffHour = Math.floor(diffMin / 60);
+  if (diffHour < 24) return `${diffHour}시간 전`;
+  const diffDay = Math.floor(diffHour / 24);
+  if (diffDay < 7) return `${diffDay}일 전`;
+  const date = new Date(created);
+  return `${date.getFullYear()}.${date.getMonth() + 1}.${date.getDate()}`;
+}
+
+
 export default function CommunityDetailPage() {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const images = [
-    "@/assets/sixgiga.png",
-    "@/assets/sixgiga.png",
-    "@/assets/sixgiga.png",
-    "@/assets/sixgiga.png",
-  ];
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const { id } = useLocalSearchParams();
+
   const [heart, setHeart] = useState(false);
   const handleHeart = () => {
     setHeart((prev) => !prev);
   };
 
+  const [content, setContent] = useState<Post | null>(null);
+  const [author, setAuthor] = useState<any>(null);
+  const [commentInput, setCommentInput] = useState("");
+
+  useEffect(()=> {
+    api.axiosInstance.get("/board")
+      .then((res)=>{
+        res.data.forEach((data:Post) => {
+          if (data.id == id){
+            setContent(data);
+            api.axiosInstance.get(`/users/${data.userId}`)
+              .then((res)=>{
+                setAuthor(res.data)
+              }).catch(()=>{{
+                console.log("불러오기실패")
+              }})
+        
+            console.log(data)
+          }
+        });
+      })
+      .catch(err=>{
+        console.log("로딩중 실패")
+      })
+  },[])
+
+  if (!content) 
+    return
+  if (!author) 
+    return
   return (
-    <Container>
-      <SafeAreaView style={{ width: "100%", height: "100%" }}>
-        <Header>
-          <DismissButton />
-          <HeaderText>커뮤니티</HeaderText>
-        </Header>
-
-        <ScrollView>
-          <ImageCarousel
-            horizontal
-            pagingEnabled
-            showsHorizontalScrollIndicator={false}
-            onScroll={(e) => {
-              const index = Math.round(
-                e.nativeEvent.contentOffset.x /
-                  e.nativeEvent.layoutMeasurement.width
-              );
-              setCurrentIndex(index);
-            }}
-            scrollEventThrottle={16}
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+    >
+      <Container>
+        <SafeAreaView style={{ flex: 1 }}>
+          <Header>
+            <DismissButton />
+            <HeaderText>커뮤니티</HeaderText>
+          </Header>
+          <ScrollView
+            contentContainerStyle={{ paddingBottom: 120 }}
+            showsVerticalScrollIndicator={false}
           >
-            {images.map((uri, i) => (
-              <ImageItem key={i} source={{ uri }} resizeMode="contain" />
-            ))}
-          </ImageCarousel>
-          <IndicatorContainer>
-            {images.map((_, i) => (
-              <IndicatorDot key={i} active={i === currentIndex} />
-            ))}
-          </IndicatorContainer>
-          <UserInfo>
-            <UserProfileImage />
-            <UserInfoColumn>
-              <Username>알바님</Username>
-              <UserLocation>율하역 인근 거주</UserLocation>
-            </UserInfoColumn>
-            <TouchableOpacity onPress={handleHeart} activeOpacity={0.7}>
-              <Ionicons
-                name={heart ? "heart-sharp" : "heart-outline"}
-                size={24}
-                color={heart ? "#5457F7" : "#A0A0A0"}
-              />
-            </TouchableOpacity>
-          </UserInfo>
+            <ImageCarousel
+              horizontal
+              pagingEnabled
+              showsHorizontalScrollIndicator={false}
+              onScroll={(e) => {
+                const index = Math.round(
+                  e.nativeEvent.contentOffset.x /
+                    e.nativeEvent.layoutMeasurement.width
+                );
+                setCurrentIndex(index);
+              }}
+              scrollEventThrottle={16}
+            >
+              {content.images.map((uri, i) => (
+                <ImageItem key={i} source={{ uri: uri }} resizeMode="contain" />
+              ))}
+            </ImageCarousel>
+            <IndicatorContainer>
+              {content.images.map((_, i) => (
+                <IndicatorDot key={i} active={i === currentIndex} />
+              ))}
+            </IndicatorContainer>
+            <UserInfo>
+              <UserProfileImage />
+              <UserInfoColumn>
+                <Username>{author.name}</Username>
+                <UserLocation>{author.location}</UserLocation>
+              </UserInfoColumn>
+            </UserInfo>
+            <Title>{content.title}</Title>
+            <Time>{getTimeAgo(content.createTime)}</Time>
+            <Detail>
+              {content.content}
+            </Detail>
 
-          <Title>어이가 없습니다 임금 체불 당했습니다.</Title>
-          <Time>1시간 전</Time>
-          <Detail>
-            저 정보처리기능사 오너인데 돈을 안주네요;; 진짜 정보처리기능사딴다고
-            얼마나 고생했는데요...
-          </Detail>
-          <CommentCount>댓글 (1개)</CommentCount>
+          </ScrollView>
+        </SafeAreaView>
 
-          <CommentBox></CommentBox>
-          <CommentBox></CommentBox>
-          <CommentBox></CommentBox>
-          <CommentBox></CommentBox>
-        </ScrollView>
-      </SafeAreaView>
-    </Container>
+      </Container>
+    </KeyboardAvoidingView>
   );
 }
 
 const Container = styled.View`
-  width: 100%;
-  height: 100%;
+  flex: 1;
   background-color: white;
   padding: 0 20px;
 `;
@@ -99,7 +156,7 @@ const Header = styled.View`
 const HeaderText = styled.Text`
   font-size: 18px;
   font-weight: 600;
-  font-family: Pretendard-Regular;
+  font-family: "Pretendard-SemiBold";
 `;
 
 const ImageCarousel = styled.ScrollView`
@@ -155,13 +212,13 @@ const UserInfoColumn = styled.View`
 const Username = styled.Text`
   font-size: 17px;
   font-weight: 700;
-  font-family: Pretendard-Regular;
+  font-family: "Pretendard-Bold";
 `;
 const UserLocation = styled.Text`
   font-size: 12px;
   font-weight: 600;
   color: ${({ theme }) => theme.colors.textgray};
-  font-family: Pretendard-Regular;
+  font-family: "Pretendard-SemiBold";
 `;
 
 //내용부분
@@ -171,21 +228,21 @@ const Title = styled.Text`
   font-weight: 700;
   color: black;
   margin-bottom: 3px;
-  font-family: Pretendard-Regular;
+  font-family: 'Pretendard-Bold';
 `;
 const Time = styled.Text`
   font-size: 14px;
   font-weight: 500;
   color: ${({ theme }) => theme.colors.textgray};
   margin-bottom: 15px;
-  font-family: Pretendard-Regular;
+  font-family: 'Pretendard-Regular';
 `;
 const Detail = styled.Text`
   font-size: 16px;
   font-weight: 400;
   color: #141414;
   margin-bottom: 25px;
-  font-family: Pretendard-Regular;
+  font-family: 'Pretendard-Regular';
 `;
 
 const CommentCount = styled.Text`
@@ -193,5 +250,51 @@ const CommentCount = styled.Text`
   font-weight: 700;
   color: #5457f7;
   margin-bottom: 20px;
-  font-family: Pretendard-Regular;
+  font-family: "Pretendard-Bold";
+`;
+
+const CommentInputRow = styled.View`
+  flex-direction: row;
+  align-items: flex-end;
+  padding: 10px 0 30px 0;
+`;
+
+const CommentTextInput = styled.TextInput`
+  flex: 1;
+  min-height: 40px;
+  max-height: 100px;
+  background-color: #f3f4f5;
+  border-radius: 8px;
+  padding: 10px 15px;
+  font-size: 15px;
+  margin-right: 10px;
+`;
+
+const CommentSubmitButton = styled.TouchableOpacity`
+  background-color: #5457f7;
+  padding: 10px 16px;
+  border-radius: 8px;
+  justify-content: center;
+  align-items: center;
+`;
+
+const CommentSubmitText = styled.Text`
+  color: #fff;
+  font-size: 15px;
+  font-family: "Pretendard-SemiBold";
+`;
+
+const CommentInputRowFixed = styled.View`
+  flex-direction: row;
+  align-items: flex-end;
+  padding: 10px 0 30px 0;
+  background: #fff;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding-left: 20px;
+  padding-right: 20px;
+  border-top-width: 1px;
+  border-top-color: #f3f4f5;
 `;
