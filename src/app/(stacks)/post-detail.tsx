@@ -9,11 +9,10 @@ import * as S from "../../styles/pages/post-detail";
 import { PrimaryButton } from "../../components/button/PrimaryButton";
 import { DismissButton } from "@/components/button/dismiss_button";
 import { useEffect, useState } from "react";
-import { Ionicons } from "@expo/vector-icons";
-
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { api } from "@/libs/api";
 import styled from "styled-components/native";
+import normalProfile from '../../../assets/nomal-profile.png';
 
 export default function PostDetailPage() {
   const { post } = useLocalSearchParams();
@@ -21,8 +20,6 @@ export default function PostDetailPage() {
 
   const isJob = parsedPost?.isRecruitment ?? false;
 
-  const [heart, setHeart] = useState(false);
-  const handleHeart = () => setHeart((prev) => !prev);
 
   const [user, setUser] = useState<any>();
   const screenWidth = Dimensions.get("window").width;
@@ -131,7 +128,7 @@ export default function PostDetailPage() {
             >
               <Profile>
                 <Image
-                  source={require("/Users/dgsw07/Desktop/React-Native/2025-dgsw-hackerton/assets/nomal-profile.png")}
+                  source={normalProfile}
                 ></Image>
               </Profile>
             </TouchableOpacity>

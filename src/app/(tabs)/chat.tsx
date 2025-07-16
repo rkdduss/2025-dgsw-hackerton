@@ -5,6 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { api } from '@/libs/api';
 import { getMyChatRooms, ChatRoom } from '@/services/chat.service';
 import { useQuery } from '@tanstack/react-query';
+import { View } from 'react-native';
 
 interface User {
   id: string;
@@ -69,8 +70,8 @@ export default function ChatPage() {
     })();
   }, [chatRooms, user?.id]);
 
-  if (userLoading || chatRoomsLoading) return <S.Container><S.HeaderTitle>로딩중...</S.HeaderTitle></S.Container>;
-  if (userError || chatRoomsError) return <S.Container><S.HeaderTitle>에러 발생</S.HeaderTitle></S.Container>;
+  if (userLoading || chatRoomsLoading) return <View style={{flex: 1, justifyContent:'center',alignItems: 'center'}}><S.HeaderTitle>로딩중...</S.HeaderTitle></View>;
+  if (userError || chatRoomsError) return  <View style={{flex: 1, justifyContent:'center',alignItems: 'center'}}><S.HeaderTitle>에러 발생</S.HeaderTitle></View>
 
   return (
     <S.Container>

@@ -7,6 +7,7 @@ import styled from "styled-components/native";
 import { Entypo } from "@expo/vector-icons";
 import { api } from "@/libs/api";
 import { UserResponse, fetchMyInfo } from "@/services/user.service";
+import normalProfile from '../../../assets/nomal-profile.png';
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -47,7 +48,7 @@ export default function ProfilePage() {
         </S.Header>
         <ProfileContainer>
           <Profile>
-            <Image source={require("/Users/dgsw07/Desktop/React-Native/2025-dgsw-hackerton/assets/nomal-profile.png")}></Image>
+            <Image source={normalProfile}></Image>
           </Profile>
           <ProfileInfo>
             <ProfileName>{user?.name}</ProfileName>
