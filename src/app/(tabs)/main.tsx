@@ -8,14 +8,14 @@ import Feather from "@expo/vector-icons/Feather";
 import { PostResponse, fetchPosts } from "@/services/post";
 
 const categories = [
-  { name: "구인", icon: "" },
-  { name: "구직", icon: "" },
-  { name: "아르바이트", icon: "" },
-  { name: "단기 알바", icon: "" },
-  { name: "프리랜서", icon: "" },
-  { name: "외주", icon: "" },
-  { name: "채용", icon: "" },
-  { name: "재택알바", icon: "" },
+  { name: "구인", icon: require("@/assets/icons/icon_1.png") },
+  { name: "구직", icon: require("@/assets/icons/icon_2.png") },
+  { name: "아르바이트", icon: require("@/assets/icons/icon_3.png") },
+  { name: "단기 알바", icon: require("@/assets/icons/icon_4.png") },
+  { name: "프리랜서", icon: require("@/assets/icons/icon_5.png") },
+  { name: "외주", icon: require("@/assets/icons/icon_6.png") },
+  { name: "채용", icon: require("@/assets/icons/icon_7.png") },
+  { name: "재택알바", icon: require("@/assets/icons/icon_8.png") },
 ];
 
 const filters = ["공고 중", "내 보유 자격증", "임금 높은 순", "리뷰 많은 순"];
@@ -55,7 +55,6 @@ export default function MainPage() {
       <S.Header>
         <S.LocationContainer>
           <S.LocationText>구지면</S.LocationText>
-          <S.DropdownIcon source={require("../../../assets/dismiss.png")} />
         </S.LocationContainer>
         <S.SearchContainer>
           <S.SearchInput placeholder="검색어를 입력해주세요" />
@@ -70,7 +69,9 @@ export default function MainPage() {
       <S.CategoryContainer>
         {categories.slice(0, 4).map((category, index) => (
           <S.CategoryItem key={index}>
-            <S.CategoryIconContainer />
+            <S.CategoryIconContainer>
+              <S.CategoryIconImage source={category.icon}/>
+            </S.CategoryIconContainer>
             <S.CategoryText>{category.name}</S.CategoryText>
           </S.CategoryItem>
         ))}
@@ -78,7 +79,9 @@ export default function MainPage() {
       <S.CategoryContainerLast>
         {categories.slice(4).map((category, index) => (
           <S.CategoryItem key={index}>
-            <S.CategoryIconContainer />
+            <S.CategoryIconContainer>
+              <S.CategoryIconImage source={category.icon}/>
+            </S.CategoryIconContainer>
             <S.CategoryText>{category.name}</S.CategoryText>
           </S.CategoryItem>
         ))}

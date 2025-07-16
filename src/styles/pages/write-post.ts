@@ -15,7 +15,7 @@ export const Header = styled.View`
 
 export const HeaderTitle = styled.Text`
   font-size: 22px;
-  font-weight: 600;
+  font-family: 'Pretendard-SemiBold';
 `;
 
 export const Form = styled.ScrollView`
@@ -93,9 +93,15 @@ export const DropdownIcon = styled.View`
   height: 6px;
 `;
 
+export const TwoButtonContainer = styled.View`
+  width: 100%;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-bottom: 10px;
+`;
+
 export const ButtonContainer = styled.View`
   padding: 20px;
-  
   width: 100%;
   padding-top: 0px;
   

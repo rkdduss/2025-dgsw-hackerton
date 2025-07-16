@@ -27,7 +27,7 @@ export const TabIcon = styled.View<{isFocused: boolean}>`
 
 export const TabLabel = styled.Text<{isFocused: boolean}>`
   font-size: 12px;
-  font-weight: 600;
+  font-family: 'Pretendard-SemiBold';
   color: ${({ isFocused, theme }) => isFocused ? theme.colors.primary : theme.colors.textgray};
   margin-top: 5px;
 `;

@@ -18,7 +18,7 @@ const certificates = [
 
 export default function SelectCertificatePage() {
   const router = useRouter();
-  const [selected, setSelected] = useState<string[]>(['정보처리기능사']);
+  const [selected, setSelected] = useState<string[]>([]);
 
   const toggleSelection = (cert: string) => {
     if (selected.includes(cert)) {

@@ -21,7 +21,7 @@ export const BackButton = styled.TouchableOpacity`
 
 export const HeaderTitle = styled.Text`
   font-size: 18px;
-  font-weight: 600;
+  font-family: 'Pretendard-SemiBold';
 `;
 
 export const ImageContainer = styled.View`
@@ -49,7 +49,7 @@ export const UserTextContainer = styled.View`
 
 export const UserName = styled.Text`
   font-size: 17px;
-  font-weight: bold;
+  font-family: 'Pretendard-Bold';
 `;
 
 export const UserLocation = styled.Text`
@@ -63,7 +63,7 @@ export const PostContentContainer = styled.View`
 
 export const PostTitle = styled.Text`
   font-size: 22px;
-  font-weight: bold;
+  font-family: 'Pretendard-Bold';
   margin-bottom: 10px;
 `;
 
@@ -85,7 +85,7 @@ export const Section = styled.View`
 
 export const SectionTitle = styled.Text`
   font-size: 20px;
-  font-weight: bold;
+  font-family: 'Pretendard-Bold';
   color: ${({ theme }) => theme.colors.primary};
   margin-bottom: 15px;
 `;
@@ -104,7 +104,7 @@ export const Tag = styled.TouchableOpacity<{ active: boolean }>`
 
 export const TagText = styled.Text<{ active: boolean }>`
   font-size: 14px;
-  font-weight: 600;
+  font-family: 'Pretendard-SemiBold';
   color: ${({ active }) => (active ? '#ffffff' : '#000000')};
 `;
 
@@ -139,5 +139,5 @@ export const PriceLabel = styled.Text`
 
 export const Price = styled.Text`
   font-size: 17px;
-  font-weight: bold;
+  font-family: 'Pretendard-Bold';
 `;

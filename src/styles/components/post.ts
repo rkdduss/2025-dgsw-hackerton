@@ -21,18 +21,18 @@ export const PostContent = styled.View`
 
 export const PostTitle = styled.Text`
   font-size: 18px;
-  font-weight: 600;
   color: #000000;
-  
+  font-family: 'Pretendard-SemiBold';
 `;
 
 export const PostInfo = styled.Text`
   font-size: 12px;
   color: ${({ theme }) => theme.colors.textgray};
+  font-family: 'Pretendard-Regular';
 `;
 
 export const PostPrice = styled.Text`
   font-size: 17px;
-  font-weight: bold;
   color: ${({ theme }) => theme.colors.primary};
+  font-family: 'Pretendard-Bold';
 `;

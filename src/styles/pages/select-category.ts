@@ -21,7 +21,7 @@ export const BackButton = styled.TouchableOpacity`
 
 export const HeaderTitle = styled.Text`
   font-size: 18px;
-  font-weight: 600;
+  font-family: 'Pretendard-SemiBold';
 `;
 
 export const CategoryList = styled.ScrollView`
@@ -36,7 +36,7 @@ export const CategoryItem = styled.TouchableOpacity<{ selected: boolean }>`
 
 export const CategoryText = styled.Text<{ selected: boolean }>`
   font-size: 18px;
-  font-weight: ${({ selected }) => (selected ? 'bold' : '600')};
+  font-family: ${({ selected }) => (selected ? 'Pretendard-Bold' : 'Pretendard-SemiBold')};
   color: ${({ selected, theme }) => (selected ? theme.colors.primary : '#000000')};
 `;
 

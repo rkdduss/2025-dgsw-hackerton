@@ -40,19 +40,19 @@ export default function SignupPage() {
 const Title = styled.Text`
   width: 100%;
   font-size: 22px;
-  font-weight: 700;
+  font-family: 'Pretendard-Bold';
   margin-bottom: 10px;
 `;
 const SubTitle = styled.Text`
   width: 100%;
   font-size: 16px;
-  font-weight: 500;
+  font-family: 'Pretendard-Medium';
   color: ${({ theme }) => theme.colors.textgray};
 `;
 
 const AllAgree = styled.Text`
   font-size: 18px;
-  font-weight: 700;
+  font-family: 'Pretendard-Bold';
 `
 
 const AccessRowContainer = styled.View`

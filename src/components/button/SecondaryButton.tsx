@@ -7,7 +7,7 @@ interface Props {
   style?: "small" | "default" | "medium"
 }
 
-export const PrimaryButton = ({ action, text, disabled = false, style }: Props) => {
+export const SecondaryButton = ({ action, text, disabled = false, style }: Props) => {
   
   if (style == "medium")
     return (
@@ -31,7 +31,7 @@ const Container = styled.TouchableOpacity<{ isDisabled: boolean }>`
   width: 100%;
   height: 55px;
   border-radius: 10px;
-  background-color: ${({ isDisabled }) => (isDisabled ? "#F3F4F5" : "#5457f7")};
+  background-color: #F3F4F5;
   justify-content: center;
   align-items: center;
 `;
@@ -39,5 +39,5 @@ const Container = styled.TouchableOpacity<{ isDisabled: boolean }>`
 const ButtonText = styled.Text<{ isDisabled: boolean }>`
   font-size: 16px;
   font-family: 'Pretendard-SemiBold';
-  color: ${({ isDisabled }) => (!isDisabled ? "white" : "#BFBFBF")};
+  color: #BFBFBF;
 `;

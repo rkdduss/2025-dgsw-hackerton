@@ -84,6 +84,7 @@ export default function ChatPage() {
           )}
           {Array.isArray(chatRooms) &&
             chatRooms.map((chat: any) => {
+              console.log('chat.id:', chat.id, chat);
               const otherId = Array.isArray(chat.users)
                 ? chat.users.find((uid: string) => uid !== user?.id)
                 : undefined;

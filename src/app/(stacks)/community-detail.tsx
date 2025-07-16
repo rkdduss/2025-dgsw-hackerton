@@ -99,6 +99,7 @@ const Header = styled.View`
 const HeaderText = styled.Text`
   font-size: 18px;
   font-weight: 600;
+  font-family: Pretendard-Regular;
 `;
 
 const ImageCarousel = styled.ScrollView`
@@ -154,11 +155,13 @@ const UserInfoColumn = styled.View`
 const Username = styled.Text`
   font-size: 17px;
   font-weight: 700;
+  font-family: Pretendard-Regular;
 `;
 const UserLocation = styled.Text`
   font-size: 12px;
   font-weight: 600;
   color: ${({ theme }) => theme.colors.textgray};
+  font-family: Pretendard-Regular;
 `;
 
 //내용부분
@@ -168,18 +171,21 @@ const Title = styled.Text`
   font-weight: 700;
   color: black;
   margin-bottom: 3px;
+  font-family: Pretendard-Regular;
 `;
 const Time = styled.Text`
   font-size: 14px;
   font-weight: 500;
   color: ${({ theme }) => theme.colors.textgray};
   margin-bottom: 15px;
+  font-family: Pretendard-Regular;
 `;
 const Detail = styled.Text`
   font-size: 16px;
   font-weight: 400;
   color: #141414;
   margin-bottom: 25px;
+  font-family: Pretendard-Regular;
 `;
 
 const CommentCount = styled.Text`
@@ -187,4 +193,5 @@ const CommentCount = styled.Text`
   font-weight: 700;
   color: #5457f7;
   margin-bottom: 20px;
+  font-family: Pretendard-Regular;
 `;

@@ -75,7 +75,7 @@ const Header = styled.View`
 
 const HeaderTitle = styled.Text`
   font-size: 18px;
-  font-weight: 600;
+  font-family: 'Pretendard-SemiBold';
   color: black;
 `;
 
