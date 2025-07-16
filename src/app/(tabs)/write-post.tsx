@@ -38,6 +38,7 @@ export default function WritePostPage() {
   const queryClient = useQueryClient();
 
   const [title, setTitle] = useState("");
+  const [price, setPrice] = useState("");
   const [content, setContent] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedCertificates, setSelectedCertificates] = useState<string[]>([]);
@@ -169,8 +170,7 @@ export default function WritePostPage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['posts'] });
-      Alert.alert("✅ 게시글 등록 완료", "게시글이 성공적으로 등록되었어요!");
-      router.replace("/community");
+      router.replace("/main");
     },
     onError: (error: any) => {
       Alert.alert(
@@ -191,6 +191,10 @@ export default function WritePostPage() {
     }
     if (!content.trim()) {
       Alert.alert("⚠️ 내용 누락", "내용을 입력해주세요!");
+      return;
+    }
+    if (!price.trim()) {
+      Alert.alert("⚠️ 내용 누락", "금액을 입력해주세요!");
       return;
     }
     if (!buttonCategory) {
@@ -222,11 +226,14 @@ export default function WritePostPage() {
         },
       });
       const res = await api.axiosInstance.get("/users/me");
+      console.log(imageRes.data)
+      console.log(res.data)
       console.log('buttonCategory:', buttonCategory); // 상태 추적용
       const postPayload = {
         userId: res.data.id,
         title,
         content,
+        price:Number(price),
         images: imageRes.data,
         isRecruitment: selectedCategory === '구인',
         type: selectedCategory ?? "기타",
@@ -234,6 +241,7 @@ export default function WritePostPage() {
       };
       postMutation.mutate(postPayload);
     } catch (error: any) {
+      console.log(error)
       Alert.alert(
         "⚠️ 등록 실패",
         error?.response?.data?.message || "알 수 없는 오류가 발생했어요"
@@ -292,17 +300,6 @@ export default function WritePostPage() {
                 />
               </View>
             </S.ImagePickerContainer>
-
-            <S.InputContainer>
-              <S.InputLabel>제목</S.InputLabel>
-              <S.TextInput
-                value={title}
-                onChangeText={setTitle}
-                autoCapitalize="none"
-                placeholder="제목을 입력해주세요!"
-              />
-            </S.InputContainer>
-
             <S.TwoButtonContainer>
               {buttonCategory === '구인' ? (
                 <>
@@ -348,6 +345,29 @@ export default function WritePostPage() {
               )}
             </S.TwoButtonContainer>
 
+            <S.InputContainer>
+              <S.InputLabel>제목</S.InputLabel>
+              <S.TextInput
+                value={title}
+                onChangeText={setTitle}
+                autoCapitalize="none"
+                placeholder="제목을 입력해주세요"
+              />
+            </S.InputContainer>
+            {buttonCategory && (
+              <S.InputContainer>
+                <S.InputLabel>{buttonCategory == "구인" ? "금액" : "희망 금액"}</S.InputLabel>
+                <S.TextInput
+                  keyboardType="number-pad"
+                  value={String(price)}
+                  onChangeText={(e) => {setPrice(e)}}
+                  autoCapitalize="none"
+                  placeholder="금액을 입력해주세요"
+                />
+              </S.InputContainer>
+            )
+
+            }
             <S.InputContainer>
               <S.InputLabel>카테고리</S.InputLabel>
               <S.DropdownContainer onPress={() => setPickerShow(!isPickerShow)}>

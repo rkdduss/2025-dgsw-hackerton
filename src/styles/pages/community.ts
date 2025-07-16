@@ -43,3 +43,11 @@ export const CommunityBoxListArea = styled(ScrollView)`
   width: 100%;
   padding: 20px;
 `;
+
+export const EmptyText = styled.Text`
+  text-align: center;
+  color: #888;
+  margin: 32px 0;
+  font-size: 16px;
+  font-family: 'Pretendard-Regular';
+`;

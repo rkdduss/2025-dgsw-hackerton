@@ -31,13 +31,21 @@ export default function RootLayout() {
 
 
   useEffect(()=> {
-    api.axiosInstance.get("/users/me")
-      .then(()=>{
-        router.replace("/(tabs)/main")
-      })
-      .catch(err=>{
-        tokenStorage.clearTokens();
-      })
+    tokenStorage.getToken().then(token=>{
+      if (token){
+        api.axiosInstance.get("/users/me")
+        .then((res)=>{
+          console.log(res.data)
+          router.replace("/(tabs)/main")
+        })
+        .catch(err=>{
+          tokenStorage.clearTokens();
+          router.replace("/(auth)")
+        })     
+      } 
+    }).catch()
+  
+
   },[])
   if (!fontsLoaded) {
     return <View style={{flex:1, justifyContent:'center', alignItems:'center'}}><Text>폰트 로딩중...</Text></View>;

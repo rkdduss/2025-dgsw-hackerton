@@ -8,10 +8,10 @@ import styled from "styled-components/native";
 export default function CommunityDetailPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const images = [
-    "/Users/dgsw07/Desktop/React-Native/2025-dgsw-hackerton/assets/sixgiga.png",
-    "/Users/dgsw07/Desktop/React-Native/2025-dgsw-hackerton/assets/sixgiga.png",
-    "/Users/dgsw07/Desktop/React-Native/2025-dgsw-hackerton/assets/sixgiga.png",
-    "/Users/dgsw07/Desktop/React-Native/2025-dgsw-hackerton/assets/sixgiga.png",
+    "@/assets/sixgiga.png",
+    "@/assets/sixgiga.png",
+    "@/assets/sixgiga.png",
+    "@/assets/sixgiga.png",
   ];
   const [heart, setHeart] = useState(false);
   const handleHeart = () => {

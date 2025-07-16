@@ -16,7 +16,7 @@ export const Header = styled.View`
 export const BackButton = styled.TouchableOpacity`
   position: absolute;
   left: 20px;
-  top: 60px;
+  
 `;
 
 export const HeaderTitle = styled.Text`
@@ -33,6 +33,7 @@ export const UserInfoContainer = styled.View`
   flex-direction: row;
   align-items: center;
   padding: 20px;
+  padding-bottom: 0;
 `;
 
 export const Avatar = styled.View`
