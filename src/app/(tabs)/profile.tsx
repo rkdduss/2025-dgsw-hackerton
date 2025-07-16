@@ -1,11 +1,12 @@
-import React, { useEffect } from "react";
-import { Alert, TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Alert, Image, TouchableOpacity } from "react-native";
 import * as S from "../../styles/pages/chat";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import styled from "styled-components/native";
 import { Entypo } from "@expo/vector-icons";
 import { api } from "@/libs/api";
+import { UserResponse, fetchMyInfo } from "@/services/user.service";
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -15,16 +16,19 @@ export default function ProfilePage() {
     router.push(`/chat-detail?id=${chatId}`);
   };
 
-  const getMe = async () => {
-    try {
-      const res = await api.axiosInstance.get("/user/me");
-      console.log(res.data);
-    } catch (e) {
-      console.error(e);
-    }
-  };
+  const [user, setUser] = useState<UserResponse>();
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    const loadUser = async () => {
+      try {
+        const res = await fetchMyInfo();
+        setUser(res.data);
+      } catch (err) {
+        console.error("사용자 정보 불러오기 실패", err);
+      }
+    };
+    loadUser();
+  }, []);
 
   const handleDeleteAccount = async () => {
     try {
@@ -42,10 +46,12 @@ export default function ProfilePage() {
           <S.HeaderTitle>내정보</S.HeaderTitle>
         </S.Header>
         <ProfileContainer>
-          <Profile></Profile>
+          <Profile>
+            <Image source={require("/Users/dgsw07/Desktop/React-Native/2025-dgsw-hackerton/assets/nomal-profile.png")}></Image>
+          </Profile>
           <ProfileInfo>
-            <ProfileName>먼지</ProfileName>
-            <ProfileMap>먼지없음</ProfileMap>
+            <ProfileName>{user?.name}</ProfileName>
+            <ProfileMap>{user?.location}</ProfileMap>
           </ProfileInfo>
         </ProfileContainer>
         <Diveder />
@@ -76,6 +82,8 @@ const Profile = styled.View`
   height: 60px;
   background-color: #5457f7;
   border-radius: 100px;
+  justify-content: center;
+  align-items: center;
 `;
 
 const ProfileContainer = styled.View`
