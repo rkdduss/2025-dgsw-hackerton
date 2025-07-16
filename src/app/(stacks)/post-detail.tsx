@@ -10,8 +10,9 @@ import { PrimaryButton } from "../../components/button/PrimaryButton";
 import { DismissButton } from "@/components/button/dismiss_button";
 import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { api } from "@/libs/api";
+import styled from "styled-components/native";
 
 export default function PostDetailPage() {
   const { post } = useLocalSearchParams();
@@ -50,6 +51,8 @@ export default function PostDetailPage() {
     return <></>;
   }
 
+  const router = useRouter();
+
   return (
     <View style={{ flex: 1 }}>
       <S.Container>
@@ -72,7 +75,7 @@ export default function PostDetailPage() {
               }}
               scrollEventThrottle={16}
               contentContainerStyle={{
-                alignItems:"center"
+                alignItems: "center",
               }}
             >
               {parsedPost.images?.map((img: string, idx: number) => (
@@ -93,9 +96,9 @@ export default function PostDetailPage() {
               style={{
                 flexDirection: "row",
                 justifyContent: "center",
-                position:"absolute",
-                bottom:20,
-                width:"100%"
+                position: "absolute",
+                bottom: 20,
+                width: "100%",
               }}
             >
               {parsedPost.images?.map((_: string, idx: number) => (
@@ -114,7 +117,21 @@ export default function PostDetailPage() {
           </S.ImageContainer>
 
           <S.UserInfoContainer>
-            <S.Avatar />
+            <TouchableOpacity
+              onPress={() => {
+                console.log("");
+                router.push({
+                  pathname: "/other-user-profile",
+                  params: { id: user.id },
+                });
+              }}
+            >
+              <Profile>
+                <Image
+                  source={require("/Users/dgsw07/Desktop/React-Native/2025-dgsw-hackerton/assets/nomal-profile.png")}
+                ></Image>
+              </Profile>
+            </TouchableOpacity>
             <S.UserTextContainer>
               <S.UserName>{user?.name}</S.UserName>
 
@@ -144,12 +161,18 @@ export default function PostDetailPage() {
       </S.Container>
       <S.BottomBar>
         <S.BottomBarContainer>
-          <TouchableOpacity onPress={handleHeart} activeOpacity={0.7}>
-            <Ionicons
-              name={heart ? "heart-sharp" : "heart-outline"}
-              size={24}
-              color={heart ? "#5457F7" : "#A0A0A0"}
-            />
+          <TouchableOpacity
+            onPress={() => {
+              console.log("");
+              router.push({
+                pathname: "/other-user-profile",
+                params: { id: user.id },
+              });
+            }}
+          >
+            <Profile>
+              <Image source={require("@/assets/nomal-profile.png")} />
+            </Profile>
           </TouchableOpacity>
           <S.PriceContainer>
             <S.PriceLabel>시급 (오전 9시 ~ 오후 6시)</S.PriceLabel>
@@ -161,3 +184,13 @@ export default function PostDetailPage() {
     </View>
   );
 }
+
+const Profile = styled.View`
+  width: 60px;
+  height: 60px;
+  background-color: #5457f7;
+  border-radius: 100px;
+  justify-content: center;
+  align-items: center;
+  margin-right: 12px;
+`;

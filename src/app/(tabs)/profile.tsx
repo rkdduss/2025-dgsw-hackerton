@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Alert, TouchableOpacity } from "react-native";
+import { Alert, Image, TouchableOpacity } from "react-native";
 import * as S from "../../styles/pages/chat";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -16,7 +16,7 @@ export default function ProfilePage() {
     router.push(`/chat-detail?id=${chatId}`);
   };
 
-  const [user, setUser] = useState<UserResponse>(null);
+  const [user, setUser] = useState<UserResponse>();
 
   useEffect(() => {
     const loadUser = async () => {
@@ -46,10 +46,12 @@ export default function ProfilePage() {
           <S.HeaderTitle>내정보</S.HeaderTitle>
         </S.Header>
         <ProfileContainer>
-          <Profile></Profile>
+          <Profile>
+            <Image source={require("/Users/dgsw07/Desktop/React-Native/2025-dgsw-hackerton/assets/nomal-profile.png")}></Image>
+          </Profile>
           <ProfileInfo>
-            <ProfileName>{user}</ProfileName>
-            <ProfileMap>먼지없음</ProfileMap>
+            <ProfileName>{user?.name}</ProfileName>
+            <ProfileMap>{user?.location}</ProfileMap>
           </ProfileInfo>
         </ProfileContainer>
         <Diveder />
@@ -80,6 +82,8 @@ const Profile = styled.View`
   height: 60px;
   background-color: #5457f7;
   border-radius: 100px;
+  justify-content: center;
+  align-items: center;
 `;
 
 const ProfileContainer = styled.View`

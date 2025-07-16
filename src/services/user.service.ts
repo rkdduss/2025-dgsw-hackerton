@@ -10,7 +10,7 @@ export const userService = {
 };
 
 export const fetchMyInfo = async () => {
-  return api.axiosInstance.get("/user/me");
+  return api.axiosInstance.get("/users/me");
 };
 
 export interface UserResponse {
