@@ -14,8 +14,10 @@ const navItems = [
 ];
 
 export function TabBar({ state, navigation }: BottomTabBarProps) {
+  // main, community | write-post | chat, profile
   return (
     <S.Container>
+      {/* 왼쪽 2개 */}
       {navItems.slice(0, 2).map((item, index) => {
         const isFocused = state.index === index;
         return (
@@ -25,14 +27,16 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
           </S.TabButton>
         );
       })}
+      {/* 중앙 글쓰기 */}
       <S.CentralButton onPress={() => navigation.navigate('write-post')}>
         <S.CentralIcon>
           <Entypo name="plus" size={28} color="white" />
         </S.CentralIcon>
       </S.CentralButton>
-      <View style={{ width: 72 }} />
+      <View style={{width:72}}/>
       {navItems.slice(2).map((item, index) => {
-        const isFocused = state.index === index + 2;
+        // 중앙버튼(write-post)이 index 2이므로 +2
+        const isFocused = state.index === index + 3;
         return (
           <S.TabButton key={item.name} onPress={() => navigation.navigate(item.route)}>
             <S.TabIcon isFocused={isFocused}>{item.icon(isFocused)}</S.TabIcon>
