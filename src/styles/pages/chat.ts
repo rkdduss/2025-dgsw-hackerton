@@ -15,7 +15,7 @@ export const Header = styled.View`
 
 export const HeaderTitle = styled.Text`
   font-size: 22px;
-  font-weight: 600;
+  font-family: 'Pretendard-SemiBold';
 `;
 
 export const ChatList = styled.ScrollView`
@@ -51,16 +51,18 @@ export const ChatHeader = styled.View`
 
 export const ChatName = styled.Text`
   font-size: 16px;
-  font-weight: bold;
   color: #000000;
+  font-family: 'Pretendard-Bold';
 `;
 
 export const ChatTime = styled.Text`
   font-size: 12px;
   color: ${({ theme }) => theme.colors.textgray};
+  font-family: 'Pretendard-Regular';
 `;
 
 export const LastMessage = styled.Text`
   font-size: 14px;
   color: ${({ theme }) => theme.colors.textgray};
+  font-family: 'Pretendard-Regular';
 `;

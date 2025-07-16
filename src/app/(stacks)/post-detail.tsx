@@ -10,6 +10,7 @@ import { PrimaryButton } from "../../components/button/PrimaryButton";
 import { DismissButton } from "@/components/button/dismiss_button";
 import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
+
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { api } from "@/libs/api";
 import styled from "styled-components/native";
@@ -75,19 +76,21 @@ export default function PostDetailPage() {
               }}
               scrollEventThrottle={16}
               contentContainerStyle={{
-                alignItems: "center",
+                alignItems:"center",
               }}
             >
               {parsedPost.images?.map((img: string, idx: number) => (
-                <Image
-                  key={idx}
-                  source={{ uri: img }}
-                  style={{
-                    width: screenWidth,
-                    height: 250,
-                    resizeMode: "cover",
-                  }}
-                />
+                <View key={idx} style={{backgroundColor:"black"}}>
+                  <Image
+                    source={{ uri: img }}
+                    style={{
+                      width: screenWidth,
+                      height:260,
+                      resizeMode: "cover",
+                    }}
+                  />  
+                </View>
+                
               ))}
             </ScrollView>
 
@@ -96,9 +99,9 @@ export default function PostDetailPage() {
               style={{
                 flexDirection: "row",
                 justifyContent: "center",
-                position: "absolute",
-                bottom: 20,
-                width: "100%",
+                position:"absolute",
+                bottom:20,
+                width:"100%"
               }}
             >
               {parsedPost.images?.map((_: string, idx: number) => (
@@ -178,7 +181,10 @@ export default function PostDetailPage() {
             <S.PriceLabel>시급 (오전 9시 ~ 오후 6시)</S.PriceLabel>
             <S.Price>{isJob ? "34,000원" : "12,000원"}</S.Price>
           </S.PriceContainer>
-          <PrimaryButton text="채팅 하기" action={() => {}} style="small" />
+
+          <PrimaryButton text="채팅 하기" action={() => {
+            router.push(`/(stacks)/chat-detail?id=${user.id}`)
+          }} style="small" />
         </S.BottomBarContainer>
       </S.BottomBar>
     </View>

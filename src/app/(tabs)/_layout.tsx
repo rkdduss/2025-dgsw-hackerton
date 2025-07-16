@@ -6,15 +6,15 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
+        animation:"shift"
       }}
       tabBar={(props) => <TabBar {...props} />}
     >
       <Tabs.Screen name="main" />
       <Tabs.Screen name="community" />
-      
-      <Tabs.Screen name="chat" />
-      <Tabs.Screen name="profile" />
       <Tabs.Screen name="write-post" />
+      <Tabs.Screen name="chat" />
+      <Tabs.Screen name="profile" />  
     </Tabs>
   );
 }

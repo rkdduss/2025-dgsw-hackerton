@@ -52,10 +52,11 @@ export default function ChatDetailPage() {
   }, [roomId]);
 
   useEffect(() => {
+    console.log('roomId:', roomId);
     console.log('[chat-detail] subscribeMessages useEffect', roomId);
     if (typeof roomId !== 'string') return;
     unsubscribeRef.current = subscribeMessages(roomId, (msgs) => {
-      console.log('[chat-detail] subscribeMessages 콜백', msgs);
+      console.log('messages:', msgs);
       setMessages(msgs);
     });
     return () => {

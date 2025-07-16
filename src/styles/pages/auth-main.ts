@@ -12,14 +12,14 @@ export const Container = styled.View`
 export const Title = styled.Text`
   margin: 10px 0;
   font-size: 22px;
-  font-weight: 700;
   color: ${({ theme }) => theme.colors.primary};
+  font-family: 'Pretendard-Bold';
 `;
 
 export const SubTitle = styled.Text`
   font-size: 16px;
-  font-weight: 500;
   color: ${({ theme }) => theme.colors.textgray};
+  font-family: 'Pretendard-Medium';
 `;
 
 export const ExistingUser = styled.View`
@@ -32,6 +32,6 @@ export const ExistingUser = styled.View`
 `;
 export const ExistingUserText = styled.Text`
   font-size: 16px;
-  font-weight: 700;
   color: ${({ theme }) => theme.colors.primary};
+  font-family: 'Pretendard-Bold';
 `;

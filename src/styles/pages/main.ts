@@ -1,4 +1,5 @@
 import { ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import styled from 'styled-components/native';
 
 export const Container = styled.View`
@@ -8,7 +9,7 @@ export const Container = styled.View`
 
 export const Header = styled.View`
   padding: 20px;
-  padding-top: 60px; /* For status bar */
+  padding-top: 80px; /* For status bar */
 `;
 
 export const LocationContainer = styled.View`
@@ -19,9 +20,9 @@ export const LocationContainer = styled.View`
 
 export const LocationText = styled.Text`
   font-size: 22px;
-  font-weight: bold;
   color: ${({ theme }) => theme.colors.primary};
   margin-right: 7px;
+  font-family: 'Pretendard-Bold';
 `;
 
 export const DropdownIcon = styled.Image`
@@ -77,12 +78,20 @@ export const CategoryIconContainer = styled.View`
   border-radius: 10px;
   background-color: #f3f4f5;
   margin-bottom: 10px;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const CategoryIconImage = styled.Image`
+  width: 40px;
+  height: 40px;
+  resize-mode: contain;
 `;
 
 export const CategoryText = styled.Text`
   font-size: 12px;
-  font-weight: 600;
   color: #000000;
+  font-family: 'Pretendard-SemiBold';
 `;
 
 export const Divider = styled.View`
@@ -102,12 +111,13 @@ export const FilterButton = styled.TouchableOpacity<{ active: boolean }>`
   border-radius: 30px;
   background-color: ${({ active, theme }) => (active ? theme.colors.primary : 'rgba(0,0,0,0.05)')};
   margin-right: 10px;
+  
 `;
 
 export const FilterText = styled.Text<{ active: boolean }>`
   font-size: 14px;
-  font-weight: 600;
   color: ${({ active }) => (active ? '#ffffff' : '#000000')};
+  font-family: 'Pretendard-SemiBold';
 `;
 
 export const PostListContainer = styled.View`

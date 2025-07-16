@@ -4,11 +4,11 @@ import * as S from "../../styles/components/post";
 interface PostProps {
   uid: string;
   title: string;
-  onPress: () => void;
   images: string[];
+  onPress: () => void;
 }
 
-export const Post = ({ uid, title, onPress, images }: PostProps) => {
+export const Post = ({ uid, title, images, onPress }: PostProps) => {
   return (
     <S.Container onPress={onPress}>
       <S.PostImage source={{uri:images[0]}}/>

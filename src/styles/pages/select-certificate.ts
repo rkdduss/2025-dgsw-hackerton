@@ -21,7 +21,7 @@ export const BackButton = styled.TouchableOpacity`
 
 export const HeaderTitle = styled.Text`
   font-size: 18px;
-  font-weight: 600;
+  font-family: 'Pretendard-SemiBold';
 `;
 
 export const SearchContainer = styled.View`
@@ -50,17 +50,17 @@ export const CertificateList = styled.ScrollView`
 
 export const CertificateItem = styled.TouchableOpacity<{ selected: boolean }>`
   padding: 20px 10px;
-  border-bottom-width: 1px;
-  border-bottom-color: #f3f4f5;
 `;
 
 export const CertificateText = styled.Text<{ selected: boolean }>`
   font-size: 16px;
-  font-weight: ${({ selected }) => (selected ? 'bold' : '600')};
+  font-family: ${({ selected }) => (selected ? 'Pretendard-Bold' : 'Pretendard-SemiBold')};
   color: ${({ selected, theme }) => (selected ? theme.colors.primary : '#000000')};
 `;
 
 export const ButtonContainer = styled.View`
   padding: 20px;
-  padding-bottom: 0px;
+  position: absolute;
+  width: 100%;
+  bottom: 20px;
 `;

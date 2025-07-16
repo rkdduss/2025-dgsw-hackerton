@@ -23,7 +23,7 @@ export const BackButton = styled.TouchableOpacity`
 
 export const HeaderTitle = styled.Text`
   font-size: 18px;
-  font-weight: bold;
+  font-family: 'Pretendard-Bold';
 `;
 
 export const MessageList = styled.ScrollView`
@@ -77,5 +77,5 @@ export const SendButton = styled.TouchableOpacity`
 export const SendButtonText = styled.Text`
   color: #ffffff;
   font-size: 20px;
-  font-weight: bold;
+  font-family: 'Pretendard-Bold';
 `;

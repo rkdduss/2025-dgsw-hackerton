@@ -19,10 +19,11 @@ import ImageViewing from "react-native-image-viewing";
 import { uploadPost } from "@/services/post";
 import axios, { Axios } from "axios";
 import { api } from "@/libs/api";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { SecondaryButton } from "@/components/button/SecondaryButton";
 
 const categories = [
-  "구인",
-  "구직",
+  "전체",
   "아르바이트",
   "단기알바",
   "프리랜서",
@@ -34,6 +35,7 @@ const categories = [
 export default function WritePostPage() {
   const router = useRouter();
   const params = useLocalSearchParams();
+  const queryClient = useQueryClient();
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -43,6 +45,7 @@ export default function WritePostPage() {
   const [images, setImages] = useState<string[]>([]);
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewIndex, setPreviewIndex] = useState(0);
+  const [buttonCategory, setButtonCategory] = useState<'구인' | '구직' | null>(null);
 
   const getFileExtension = (uri: string): string => {
     try {
@@ -151,6 +154,36 @@ export default function WritePostPage() {
     }
   }, [params.certificates]);
 
+  useEffect(() => {
+    if (selectedCategory === '구인' || selectedCategory === '구직') {
+      setButtonCategory(selectedCategory);
+    } else {
+      setButtonCategory(null);
+    }
+  }, [selectedCategory]);
+
+  // 게시글 등록 뮤테이션
+  const postMutation = useMutation({
+    mutationFn: async (postPayload: any) => {
+      await uploadPost(postPayload);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['posts'] });
+      Alert.alert("✅ 게시글 등록 완료", "게시글이 성공적으로 등록되었어요!");
+      router.replace("/community");
+    },
+    onError: (error: any) => {
+      Alert.alert(
+        "⚠️ 등록 실패",
+        error?.response?.data?.message || "알 수 없는 오류가 발생했어요"
+      );
+      if (axios.isAxiosError(error)) {
+        console.log(error.response)
+      }
+    }
+  });
+
+  // handleSubmit은 postMutation.mutate로 대체
   const handleSubmit = async () => {
     if (!title.trim()) {
       Alert.alert("⚠️ 제목 누락", "제목을 입력해주세요!");
@@ -158,6 +191,10 @@ export default function WritePostPage() {
     }
     if (!content.trim()) {
       Alert.alert("⚠️ 내용 누락", "내용을 입력해주세요!");
+      return;
+    }
+    if (!buttonCategory) {
+      Alert.alert("⚠️ 구인/구직 선택", "구인 또는 구직을 선택해주세요!");
       return;
     }
     if (!selectedCategory) {
@@ -168,7 +205,6 @@ export default function WritePostPage() {
       Alert.alert("⚠️ 자격증 누락", "자격증을 하나 이상 선택해주세요!");
       return;
     }
-
     try {
       const formData = new FormData();
       images.forEach((uri, index) => {
@@ -180,40 +216,30 @@ export default function WritePostPage() {
           type: mimeType,
         } as any);
       });
-
       const imageRes = await api.axiosInstance.post("/post/upload", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-      
-
-      
-
       const res = await api.axiosInstance.get("/users/me");
-      console.log(res.data)
+      console.log('buttonCategory:', buttonCategory); // 상태 추적용
       const postPayload = {
         userId: res.data.id,
         title,
         content,
         images: imageRes.data,
-        isRecruitment: selectedCategory === "구인",
+        isRecruitment: selectedCategory === '구인',
         type: selectedCategory ?? "기타",
         certificates: selectedCertificates,
       };
-
-      await uploadPost(postPayload);
-
-      Alert.alert("✅ 게시글 등록 완료", "게시글이 성공적으로 등록되었어요!");
-      router.replace("/community");
+      postMutation.mutate(postPayload);
     } catch (error: any) {
-      console.log(error)
       Alert.alert(
         "⚠️ 등록 실패",
-        error.response?.data?.message || "알 수 없는 오류가 발생했어요"
+        error?.response?.data?.message || "알 수 없는 오류가 발생했어요"
       );
       if (axios.isAxiosError(error)) {
-        console.error("🚨 등록 실패", error.response?.data);
+        console.log(error.response)
       }
     }
   };
@@ -229,7 +255,6 @@ export default function WritePostPage() {
           <S.Header>
             <S.HeaderTitle>글쓰기</S.HeaderTitle>
           </S.Header>
-
           <S.Form>
             <S.ImagePickerContainer>
               <View style={{ width: "100%" }}>
@@ -278,32 +303,80 @@ export default function WritePostPage() {
               />
             </S.InputContainer>
 
+            <S.TwoButtonContainer>
+              {buttonCategory === '구인' ? (
+                <>
+                  <PrimaryButton
+                    text="구인"
+                    action={() => setButtonCategory('구인')}
+                    style="medium"
+                    
+                  />
+                  <SecondaryButton
+                    text="구직"
+                    action={() => setButtonCategory('구직')}
+                    style="medium"
+                  />
+                </>
+              ) : buttonCategory === '구직' ? (
+                <>
+                  <SecondaryButton
+                    text="구인"
+                    action={() => setButtonCategory('구인')}
+                    style="medium"
+                  />
+                  <PrimaryButton
+                    text="구직"
+                    action={() => setButtonCategory('구직')}
+                    style="medium"
+                    
+                  />
+                </>
+              ) : (
+                <>
+                  <SecondaryButton
+                    text="구인"
+                    action={() => setButtonCategory('구인')}
+                    style="medium"
+                  />
+                  <SecondaryButton
+                    text="구직"
+                    action={() => setButtonCategory('구직')}
+                    style="medium"
+                  />
+                </>
+              )}
+            </S.TwoButtonContainer>
+
             <S.InputContainer>
               <S.InputLabel>카테고리</S.InputLabel>
               <S.DropdownContainer onPress={() => setPickerShow(!isPickerShow)}>
                 <S.DropdownText>
                   {selectedCategory || "카테고리를 선택해 주세요"}
                 </S.DropdownText>
-                <Entypo name="chevron-small-down" size={24} color="#7D848A" />
+                <Entypo name={isPickerShow ? "chevron-small-up" : "chevron-small-down"} size={24} color="#7D848A" />
               </S.DropdownContainer>
+              {isPickerShow && (
+                <PickerContainer>
+                  {categories.map((data) => (
+                    <PickerContent
+                      background={data === selectedCategory ? "#f4f4f4" : "white"}
+                      key={data}
+                      onPress={() => {
+                        setSelectedCategory(data);
+                        setPickerShow(false);
+                      }}
+                    >
+                      <PickerText 
+                        selected={data === selectedCategory}
+                      >{data}</PickerText>
+                    </PickerContent>
+                  ))}
+                </PickerContainer>
+              )}
             </S.InputContainer>
 
-            {isPickerShow && (
-              <PickerContainer>
-                {categories.map((data) => (
-                  <PickerContent
-                    background={data === selectedCategory ? "#f4f4f4" : "white"}
-                    key={data}
-                    onPress={() => {
-                      setSelectedCategory(data);
-                      setPickerShow(false);
-                    }}
-                  >
-                    <PickerText>{data}</PickerText>
-                  </PickerContent>
-                ))}
-              </PickerContainer>
-            )}
+            
 
             <S.InputContainer>
               <S.InputLabel>자격증</S.InputLabel>
@@ -340,9 +413,11 @@ export default function WritePostPage() {
 }
 
 const PickerContainer = styled.ScrollView`
+  position: absolute;
+  z-index: 9999;
   width: 100%;
   height: 240px;
-  margin-top: -20px;
+  margin-top: 80px;
   margin-bottom: 20px;
   background-color: #ffffff;
   border-radius: 10px;
@@ -350,13 +425,15 @@ const PickerContainer = styled.ScrollView`
 `;
 
 const PickerContent = styled(TouchableOpacity)<{ background: string }>`
-  height: 48px;
+  height: 56px;
   width: 100%;
   background-color: ${(props) => props.background};
   justify-content: center;
 `;
 
-const PickerText = styled.Text`
-  color: black;
+const PickerText = styled.Text<{selected: boolean}>`
+  color: ${(props) => props.selected ? "#5457F7" : "black"};
+  font-weight: ${(props) => props.selected ? "600" : "500"};
+  font-size: 15px;
   margin-left: 20px;
 `;

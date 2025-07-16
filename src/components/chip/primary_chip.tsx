@@ -21,6 +21,6 @@ const Container = styled.View<{ active: boolean }>`
 
 const Title = styled.Text<{ active: boolean }>`
   font-size: 14px;
-  font-weight: 600;
+  font-family: 'Pretendard-SemiBold';
   color: ${({ active }) => (active ? "white" : "black")};
 `;

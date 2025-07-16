@@ -15,17 +15,17 @@ export const Header = styled.View`
 
 export const HeaderTitle = styled.Text`
   font-size: 22px;
-  font-weight: 600;
+  font-family: 'Pretendard-SemiBold';
 `;
 
 export const FilterSelectContainer = styled.View`
-  margin-bottom: 20px;
+  
 `
 
 export const ChipRow = styled.ScrollView`
   flex-direction: row;
   margin-bottom: 24px;
-  margin-left: 20;
+  
 `;
 
 export const ChipWrapper = styled.TouchableOpacity`
